@@ -105,7 +105,6 @@ window.onload = () => {
 
   // allow color randomization by shaking the phone
   if (mobilecheck()) {
-    console.log("hello");
     mobileSetRandomColors();
   }
 
@@ -169,12 +168,6 @@ window.onload = () => {
     ) {
       header.classList.remove("invert");
     }
-
-    console.log(
-      header.classList.contains("invert"),
-      header.classList,
-      getScrollTop()
-    );
   });
 
   // pwa installation stuff
@@ -196,10 +189,11 @@ window.onload = () => {
 
   window.addEventListener("beforeinstallprompt", e => {
     deferredPrompt = e;
-  });
-
-  document.getElementById("pwaInstallButton").addEventListener("click", () => {
-    showInstallPrompt();
+    document
+      .getElementById("pwaInstallButton")
+      .addEventListener("click", () => {
+        showInstallPrompt();
+      });
   });
 };
 

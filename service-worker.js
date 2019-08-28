@@ -41,11 +41,9 @@ self.addEventListener("fetch", event => {
         .catch(err => {
           // fallback mechanism
           console.log(("error: ", err));
-          return caches
-            .open(CACHE_CONTAINING_ERROR_MESSAGES)
-            .then(function(cache) {
-              return cache.match("/offline.html");
-            });
+          return caches.open(CACHE_NAME).then(function(cache) {
+            return cache.match("./index.html");
+          });
         });
     })
   );
