@@ -1,0 +1,18 @@
+/* CREATOR */
+
+designer and developer: jpegzilla (eris)
+site: https://jpegzilla.com
+location: atlanta, ga
+email: eli(at)jpegzilla(dot)com
+
+/* SITE */
+
+standards: HTML5, CSS3, ES6, SASS
+software: Atom, Chrome
+last update: 2019/8/27
+
+/* THANKS */
+
+jxnblk for https://monochrome.jxnblk.com/,
+lea verou for https://github.com/LeaVerou/contrast-ratio/blob/gh-pages/contrast-ratio.js and https://contrast-ratio.com/,
+and daniel stern for http://danielstern.ca/range.css/#/

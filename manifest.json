@@ -1,0 +1,54 @@
+{
+  "name": "emerald",
+  "short_name": "emerald",
+  "description": "jpegzilla's emerald color palette tool",
+  "icons": [
+    {
+      "src": "./styles/img/android-icon-36x36.png",
+      "sizes": "36x36",
+      "type": "image\/png",
+      "density": "0.75"
+    }, {
+      "src": "./styles/img/android-icon-48x48.png",
+      "sizes": "48x48",
+      "type": "image\/png",
+      "density": "1.0"
+    }, {
+      "src": "./styles/img/android-icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image\/png",
+      "density": "1.5"
+    }, {
+      "src": "./styles/img/android-icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image\/png",
+      "density": "2.0"
+    }, {
+      "src": "./styles/img/android-icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image\/png",
+      "density": "3.0"
+    }, {
+      "src": "./styles/img/app-splash-512.png",
+      "sizes": "512x512",
+      "type": "image\/png"
+    }, {
+      "src": "./styles/img/app-splash-1024.png",
+      "sizes": "1024x1024",
+      "type": "image\/png"
+    }, {
+      "src": "./styles/img/app-splash-2048.png",
+      "sizes": "2048x2048",
+      "type": "image\/png"
+    }, {
+      "src": "./styles/img/app-splash-3072.png",
+      "sizes": "3072x3072",
+      "type": "image\/png"
+    }
+  ],
+
+  "start_url": "/index.html",
+  "theme_color": "#50c878",
+  "background_color": "#50c878",
+  "display": "standalone"
+}

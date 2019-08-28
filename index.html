@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>emerald.</title>
+
+  <!--  ios meta tags and icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#50c878">
+  <meta name="apple-mobile-web-app-title" content="emerald">
+
+  <!-- SEO TAGS -->
+  <meta name="description" content="emerald is a color palette tool with several useful features.">
+  <meta name="author" content="jpegzilla">
+  <meta name="robots" content="index, follow">
+  <!-- open graph protocol meta tags -->
+  <meta property="og:title" content="emerald - color palette tool.">
+  <meta property="og:description" content="emerald is a color palette tool with several useful features.">
+  <meta property="og:url" content="https://jpegzilla.com/emerald">
+  <meta property="og:site_name" content="emerald - color palette tool.">
+  <meta property="og:image" content="./styles/img/emerald-preview.png">
+  <meta property="og:type" content="website">
+  <!-- twitter card meta tags -->
+  <meta name="twitter:site" content="@jpegzilla">
+  <meta name="twitter:creator" content="@jpegzilla">
+  <meta name="twitter:title" content="emerald - color palette tool.">
+  <meta name="twitter:description" content="emerald is a color palette tool with several useful features.">
+  <meta name="twitter:image" content="./styles/img/emerald-preview.png">
+  <meta name="twitter:card" content="summary-large-image">
+  <meta name="application-name" content="emerald" />
+  <link rel="author" href="humans.txt">
+  <link rel="canonical" href="https://jpegzilla.com/emerald">
+
+  <!-- ICON TAGS -->
+  <link rel="stylesheet" href="./styles/main.min.css">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="./styles/img/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="./styles/img/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="./styles/img/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="./styles/img/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="./styles/img/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="./styles/img/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="./styles/img/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="./styles/img/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./styles/img/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./styles/img/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./styles/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="./styles/img/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./styles/img/favicon-16x16.png">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="./manifest.json">
+  <meta name="msapplication-TileColor" content="#50c878">
+  <meta name="msapplication-TileImage" content="./styles/img/ms-icon-144x144.png">
+  <meta name="theme-color" content="#50c878">
+  <meta name="msapplication-config" content="./browserconfig.xml" />
+</head>
+
+<body>
+
+  <div id="preloader">
+    <div class="colorbox-spinner">
+      <div class="colorbox"></div>
+    </div>
+    <div class="preloader-title">emerald.</div>
+  </div>
+
+  <header id="header">
+    <span id="randomizeReminder">press space to randomize</span>
+    <b></b>
+    <span>emerald.<span id="pwaInstallButton">install +</span></span>
+  </header>
+
+  <main>
+
+    <!-- show color info -->
+
+    <div id="color-field">
+      <div class="color-info">
+        <div class="color-name">
+          <div class="color-picker"><span id="showBackgroundColor" class="active">background</span><span id="showTextColor" class="inactive">text</span><span id="showColorPreviews" class="inactive">small color previews: off</span></div>
+          <div id="hex-code"></div>
+          <div id="rgb-code"></div>
+          <div id="hsl-code"></div>
+          <div id="css-name">&nbsp;</div>
+        </div>
+
+        <div id="contrast-ratio">
+          <div id="contrast-ratio-string"></div>
+          <div id="contrast-ratio-number"></div>
+        </div>
+        <div id="add-to-palette">add to palette</div>
+      </div>
+
+      <div class="color-previews">
+        <div id="bg-color-preview"></div>
+        <div id="text-color-preview"></div>
+      </div>
+    </div>
+
+    <div id="color-controls">
+      <div class="github-button"></div>
+      <!-- pick background color -->
+
+      <div class="background-picker">
+        <h1>background color.</h1>
+        <div class="picker-group">
+          <span>red <span id="redBGValue"></span></span>
+          <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="rInput">
+        </div>
+        <div class="picker-group">
+          <span>green <span id="greenBGValue"></span></span>
+          <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="gInput">
+        </div>
+        <div class="picker-group">
+          <span>blue <span id="blueBGValue"></span></span>
+          <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="bInput">
+        </div>
+      </div>
+
+      <!-- pick text color -->
+
+      <div class="text-picker">
+
+        <h1>text color.</h1>
+        <div class="picker-group">
+          <span>red <span id="redtxtValue"></span></span>
+          <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="trInput">
+        </div>
+        <div class="picker-group">
+          <span>green <span id="greentxtValue"></span></span>
+          <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="tgInput">
+        </div>
+        <div class="picker-group">
+          <span>blue <span id="bluetxtValue"></span></span>
+          <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="tbInput">
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <h1>palettes. <span id="addNewPalette">add palette +</span></h1>
+    <h2>click a color to copy it! <span id="copiedNotification">copied!</span></h2>
+    <div class="palette-container">
+
+    </div>
+  </footer>
+
+</body>
+
+<div id="palettePigmentTemplate">
+  <div></div>
+  <div></div>
+</div>
+<div id="paletteBarTemplate">
+</div>
+
+<script type="text/javascript">
+  // if ('serviceWorker' in navigator) {
+  //   window.addEventListener('load', () => {
+  //     navigator.serviceWorker.register('./service-worker.js').then((registration) => {
+  //       console.log('ServiceWorker registration successful with scope: ', registration.scope);
+  //     }, (err) => {
+  //       console.log('ServiceWorker registration failed: ', err);
+  //     });
+  //   });
+  // }
+</script>
+
+<script src="./scripts/utils.js" charset="utf-8"></script>
+<script src="./scripts/palettes.js" charset="utf-8"></script>
+<script src="./scripts/main.js" charset="utf-8"></script>
+
+</html>

@@ -1,0 +1,40 @@
+@keyframes colorchange {
+  from {
+    background: red;
+  }
+  15% {
+    background: orange;
+  }
+  30% {
+    background: yellow;
+  }
+  45% {
+    background: green;
+  }
+  60% {
+    background: blue;
+  }
+  75% {
+    background: indigo;
+  }
+  90% {
+    background: violet;
+  }
+  to {
+    background: red;
+  }
+}
+
+@keyframes loadingSpinner {
+  from {
+    transform: rotateZ(0deg);
+  }
+
+  90% {
+    transform: rotateZ(360deg);
+  }
+
+  to {
+    transform: rotateZ(360deg);
+  }
+}
