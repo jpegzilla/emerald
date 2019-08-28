@@ -304,18 +304,20 @@ body {
         margin-left: 4rem;
       }
 
-      .github-button {
+      .share-buttons {
         position: absolute;
         width: 100%;
         height: 4rem;
-        background-color: transparentize(red, 0.5);
         top: 0;
         right: 0;
-        margin-top: -2rem;
+        margin-top: -4rem;
         display: flex;
         justify-content: flex-end;
         align-items: center;
         padding: 0 4rem 0 0;
+        div + div {
+          margin-left: 1rem;
+        }
       }
 
       .background-picker,
