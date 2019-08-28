@@ -591,3 +591,11 @@ const selectText = element => {
     console.warn("Could not select text in element: Unsupported browser.");
   }
 };
+
+const geturlvars = () => {
+  var c = {};
+  window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(a, d) {
+    c[a] = d;
+  });
+  return c;
+};

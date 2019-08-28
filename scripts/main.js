@@ -20,6 +20,8 @@ const palettePigmentTemplate = document.getElementById(
 const addNewPalette = document.getElementById("addNewPalette");
 const sliders = Array.from(document.querySelectorAll('input[type="range"]'));
 
+let urlParams = geturlvars();
+
 disableScroll();
 
 window.onload = () => {

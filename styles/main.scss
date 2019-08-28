@@ -103,6 +103,10 @@ header {
     flex-direction: column;
     color: $white;
     span {
+      @media (display-mode: standalone) {
+        display: none;
+      }
+
       font-size: 0.5em;
       pointer-events: auto;
       cursor: pointer;
@@ -322,6 +326,17 @@ body {
 
         div {
           pointer-events: auto;
+        }
+
+        @media (max-width: $screen-small) {
+          flex-direction: column;
+          align-items: flex-end;
+          padding: 0 0.25rem 0.25rem 0;
+          font-size: 0.8em;
+
+          div + div {
+            margin-top: 0.15rem;
+          }
         }
       }
 
