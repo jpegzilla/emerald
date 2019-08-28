@@ -5,7 +5,7 @@ const FILES_TO_CACHE = [
   "./scripts/utils.min.js"
 ];
 
-const CACHE_NAME = "emeraldCache";
+const CACHE_NAME = "emeraldCache_v0100";
 
 self.addEventListener("install", event => {
   event.waitUntil(
@@ -30,7 +30,7 @@ self.addEventListener("fetch", event => {
           // and because we want the browser to consume the response
           // as well as the cache consuming the response, we need
           // to clone it so we have two streams.
-          var responseToCache = response.clone();
+          let responseToCache = response.clone();
 
           caches
             .open(CACHE_NAME)
@@ -41,7 +41,7 @@ self.addEventListener("fetch", event => {
         .catch(err => {
           // fallback mechanism
           console.log(("error: ", err));
-          return caches.open(CACHE_NAME).then(function(cache) {
+          return caches.open(CACHE_NAME).then(cache => {
             return cache.match("./index.html");
           });
         });
