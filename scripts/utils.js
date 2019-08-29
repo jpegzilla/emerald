@@ -513,3 +513,17 @@ const geturlvars = () => {
   });
   return c;
 };
+
+const updateMessage = document.getElementById("updateMessage");
+const triggerUpdate = document.getElementById("triggerUpdate");
+const closeUpdateMessage = document.getElementById("closeUpdateMessage");
+
+const showUpdateMessage = () => {
+  updateMessage.classList.add("visible");
+
+  triggerUpdate.addEventListener("click", () => location.reload(true));
+
+  closeUpdateMessage.addEventListener("click", () =>
+    updateMessage.classList.remove("visible")
+  );
+};

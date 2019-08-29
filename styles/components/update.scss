@@ -1,0 +1,44 @@
+@import "./_vars";
+
+.update-container {
+  width: 100%;
+  height: auto;
+  position: fixed;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  pointer-events: none;
+  user-select: none;
+
+  #updateMessage {
+    &.visible {
+      opacity: 1;
+      transition: opacity 0.3s;
+      pointer-events: auto;
+    }
+    opacity: 0;
+    transition: opacity 0.3s;
+    background-color: $white;
+    color: $black;
+    font-family: $lexend;
+    border: 1px solid transparentize($emerald, 0.3);
+    border-radius: 0.2rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    span#closeUpdateMessage {
+      text-decoration: underline;
+      margin-left: 1rem;
+      padding-left: 1rem;
+      border-left: 1px solid transparentize($dgray, 0.6);
+    }
+  }
+
+  padding: 2rem 5rem;
+  @media (max-width: $screen-small) {
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+  }
+}

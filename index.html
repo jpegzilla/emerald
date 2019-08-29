@@ -67,6 +67,10 @@
     <div class="preloader-title">emerald.</div>
   </div>
 
+  <div class="update-container">
+    <div id="updateMessage"><span id="triggerUpdate">an update is available! click here to download it.</span> <span id="closeUpdateMessage">close</span></div>
+  </div>
+
   <header id="header">
     <span id="randomizeReminder">press space to randomize</span>
     <b></b>
@@ -173,22 +177,42 @@
 <div id="paletteBarTemplate">
 </div>
 
-<script type="text/javascript">
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./service-worker.js').then((registration) => {
-        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-      }, (err) => {
-        console.log('ServiceWorker registration failed: ', err);
-      });
-    });
-  }
-</script>
-
-
 <script src="./scripts/palettes.js" charset="utf-8"></script>
 <script src="./scripts/utils.js" charset="utf-8"></script>
 <script src="./scripts/main.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+  window.isUpdateAvailable = new Promise((resolve, reject) => {
+    if ('serviceWorker' in navigator) {
+      // register service worker file
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(reg => {
+          console.log('[ServiceWorker] registered. ', reg.scope)
+
+          reg.onupdatefound = () => {
+            console.log('[ServiceWorker] update found. requesting update')
+            const installingWorker = reg.installing;
+            installingWorker.onstatechange = () => {
+              switch (installingWorker.state) {
+                case 'installed':
+                  if (navigator.serviceWorker.controller) {
+                    showUpdateMessage();
+                    resolve(true);
+                  } else {
+                    // no update available
+                    resolve(false);
+                  }
+                  break;
+              }
+            };
+          };
+        })
+        .catch(err => console.error('[ServiceWorker: ERROR]', err));
+    }
+  });
+</script>
+
+
 
 <script>
   window.twttr = (function(d, s, id) {

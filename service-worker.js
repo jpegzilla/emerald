@@ -8,6 +8,7 @@ const FILES_TO_CACHE = [
 const CACHE_NAME = "emeraldCache_v0101";
 
 self.addEventListener("install", event => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       console.log("[ServiceWorker] Pre-caching offline page");
@@ -40,7 +41,11 @@ self.addEventListener("fetch", event => {
         })
         .catch(err => {
           // fallback mechanism
-          console.log(("error: ", err));
+          console.error(
+            "[ServiceWorker: ERROR] ",
+            err.message,
+            event.request.url
+          );
           return caches.open(CACHE_NAME).then(cache => {
             return cache.match("./index.html");
           });
