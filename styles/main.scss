@@ -4,65 +4,7 @@
 @import "./components/_anims";
 @import "./components/_defaults";
 @import "./components/preloader";
-
-header {
-  &.invert {
-    filter: invert(1);
-    transition: filter 0.3s;
-  }
-  filter: invert(0);
-  transition: filter 0.3s;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  position: fixed;
-  top: 0;
-  right: 0;
-  font-family: $lexend;
-  pointer-events: none;
-  font-size: 2rem;
-  padding: 2rem 5rem;
-  @media (max-width: $screen-small) {
-    padding: 1rem 2rem;
-    font-size: 1.5rem;
-    span#randomizeReminder {
-      display: none;
-    }
-  }
-  z-index: 9;
-
-  span#randomizeReminder {
-    &.hidden {
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    font-size: 0.65em;
-    color: $white;
-  }
-
-  b {
-    height: 100%;
-    width: auto;
-    flex-grow: 1;
-  }
-
-  span {
-    text-align: right;
-    font-size: 1em;
-    display: flex;
-    flex-direction: column;
-    color: $white;
-    span {
-      @media (display-mode: standalone) {
-        display: none;
-      }
-
-      font-size: 0.5em;
-      pointer-events: auto;
-      cursor: pointer;
-    }
-  }
-}
+@import "./components/header";
 
 body {
   background-color: $white;

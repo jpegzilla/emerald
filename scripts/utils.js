@@ -282,6 +282,7 @@ const findNearestColor = hex => {
   let rgba1 = hexToRGBA(hex);
   let delta = FANCY_COLOR_NAMES == false ? 3 * 256 * 256 : 9 * 2332 * 2332;
   let rgba2, result;
+  // let deltar, deltag, deltab;
 
   colorHexArray.forEach(colorInArray => {
     rgba2 = hexToRGBA(colorInArray);
