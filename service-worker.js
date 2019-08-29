@@ -5,7 +5,7 @@ const FILES_TO_CACHE = [
   "./scripts/utils.min.js"
 ];
 
-const CACHE_NAME = "emeraldCache_v0100";
+const CACHE_NAME = "emeraldCache_v0101";
 
 self.addEventListener("install", event => {
   event.waitUntil(
