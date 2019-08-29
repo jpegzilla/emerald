@@ -8,6 +8,7 @@
 @import "./components/update";
 
 body {
+  min-width: 500px;
   background-color: $white;
   overflow: hidden;
   &.scroll {
