@@ -1,5 +1,7 @@
 const documentTitle = document.title;
 
+let FANCY_COLOR_NAMES = false;
+
 const LUM_LOWER = 0.03928;
 const LUM_DIVISOR_H = 12.92;
 const LUM_DIVISOR_L = 1.055;
@@ -15,156 +17,25 @@ let initColors = { background: "#50c878", text: "#eaeaea" };
 
 let currentColors = { background: "#50c878", text: "#eaeaea" };
 
-let cssColorNames = {
-  aliceblue: "#f0f8ff",
-  antiquewhite: "#faebd7",
-  aqua: "#00ffff",
-  aquamarine: "#7fffd4",
-  azure: "#f0ffff",
-  beige: "#f5f5dc",
-  bisque: "#ffe4c4",
-  black: "#000000",
-  blanchedalmond: "#ffebcd",
-  blue: "#0000ff",
-  blueviolet: "#8a2be2",
-  brown: "#a52a2a",
-  burlywood: "#deb887",
-  cadetblue: "#5f9ea0",
-  chartreuse: "#7fff00",
-  chocolate: "#d2691e",
-  coral: "#ff7f50",
-  cornflowerblue: "#6495ed",
-  cornsilk: "#fff8dc",
-  crimson: "#dc143c",
-  cyan: "#00ffff",
-  darkblue: "#00008b",
-  darkcyan: "#008b8b",
-  darkgoldenrod: "#b8860b",
-  darkgray: "#a9a9a9",
-  darkgreen: "#006400",
-  darkgrey: "#a9a9a9",
-  darkkhaki: "#bdb76b",
-  darkmagenta: "#8b008b",
-  darkolivegreen: "#556b2f",
-  darkorange: "#ff8c00",
-  darkorchid: "#9932cc",
-  darkred: "#8b0000",
-  darksalmon: "#e9967a",
-  darkseagreen: "#8fbc8f",
-  darkslateblue: "#483d8b",
-  darkslategray: "#2f4f4f",
-  darkslategrey: "#2f4f4f",
-  darkturquoise: "#00ced1",
-  darkviolet: "#9400d3",
-  deeppink: "#ff1493",
-  deepskyblue: "#00bfff",
-  dimgray: "#696969",
-  dimgrey: "#696969",
-  dodgerblue: "#1e90ff",
-  firebrick: "#b22222",
-  floralwhite: "#fffaf0",
-  forestgreen: "#228b22",
-  fuchsia: "#ff00ff",
-  gainsboro: "#dcdcdc",
-  ghostwhite: "#f8f8ff",
-  goldenrod: "#daa520",
-  gold: "#ffd700",
-  gray: "#808080",
-  green: "#008000",
-  greenyellow: "#adff2f",
-  grey: "#808080",
-  honeydew: "#f0fff0",
-  hotpink: "#ff69b4",
-  indianred: "#cd5c5c",
-  indigo: "#4b0082",
-  ivory: "#fffff0",
-  khaki: "#f0e68c",
-  lavenderblush: "#fff0f5",
-  lavender: "#e6e6fa",
-  lawngreen: "#7cfc00",
-  lemonchiffon: "#fffacd",
-  lightblue: "#add8e6",
-  lightcoral: "#f08080",
-  lightcyan: "#e0ffff",
-  lightgoldenrodyellow: "#fafad2",
-  lightgray: "#d3d3d3",
-  lightgreen: "#90ee90",
-  lightgrey: "#d3d3d3",
-  lightpink: "#ffb6c1",
-  lightsalmon: "#ffa07a",
-  lightseagreen: "#20b2aa",
-  lightskyblue: "#87cefa",
-  lightslategray: "#778899",
-  lightslategrey: "#778899",
-  lightsteelblue: "#b0c4de",
-  lightyellow: "#ffffe0",
-  lime: "#00ff00",
-  limegreen: "#32cd32",
-  linen: "#faf0e6",
-  magenta: "#ff00ff",
-  maroon: "#800000",
-  mediumaquamarine: "#66cdaa",
-  mediumblue: "#0000cd",
-  mediumorchid: "#ba55d3",
-  mediumpurple: "#9370db",
-  mediumseagreen: "#3cb371",
-  mediumslateblue: "#7b68ee",
-  mediumspringgreen: "#00fa9a",
-  mediumturquoise: "#48d1cc",
-  mediumvioletred: "#c71585",
-  midnightblue: "#191970",
-  mintcream: "#f5fffa",
-  mistyrose: "#ffe4e1",
-  moccasin: "#ffe4b5",
-  navajowhite: "#ffdead",
-  navy: "#000080",
-  oldlace: "#fdf5e6",
-  olive: "#808000",
-  olivedrab: "#6b8e23",
-  orange: "#ffa500",
-  orangered: "#ff4500",
-  orchid: "#da70d6",
-  palegoldenrod: "#eee8aa",
-  palegreen: "#98fb98",
-  paleturquoise: "#afeeee",
-  palevioletred: "#db7093",
-  papayawhip: "#ffefd5",
-  peachpuff: "#ffdab9",
-  peru: "#cd853f",
-  pink: "#ffc0cb",
-  plum: "#dda0dd",
-  powderblue: "#b0e0e6",
-  purple: "#800080",
-  rebeccapurple: "#663399",
-  red: "#ff0000",
-  rosybrown: "#bc8f8f",
-  royalblue: "#4169e1",
-  saddlebrown: "#8b4513",
-  salmon: "#fa8072",
-  sandybrown: "#f4a460",
-  seagreen: "#2e8b57",
-  seashell: "#fff5ee",
-  sienna: "#a0522d",
-  silver: "#c0c0c0",
-  skyblue: "#87ceeb",
-  slateblue: "#6a5acd",
-  slategray: "#708090",
-  slategrey: "#708090",
-  snow: "#fffafa",
-  springgreen: "#00ff7f",
-  steelblue: "#4682b4",
-  tan: "#d2b48c",
-  teal: "#008080",
-  thistle: "#d8bfd8",
-  tomato: "#ff6347",
-  turquoise: "#40e0d0",
-  violet: "#ee82ee",
-  wheat: "#f5deb3",
-  white: "#ffffff",
-  whitesmoke: "#f5f5f5",
-  yellow: "#ffff00",
-  yellowgreen: "#9acd32"
+const objectFlip = obj => {
+  const ret = {};
+  Object.keys(obj).forEach(key => {
+    ret[obj[key]] = key;
+  });
+  return ret;
 };
+
+let cssColorNames;
+
+const setColorNames = () => {
+  if (FANCY_COLOR_NAMES == true) {
+    cssColorNames = objectFlip(colorLib);
+  } else {
+    cssColorNames = simpleColors;
+  }
+};
+
+setColorNames();
 
 // usage: hexToColorName(cssColorNames, "#ffffff")
 
@@ -274,33 +145,33 @@ const hslToRGB = (h, s, l) => {
 const rgbToHSL = (r, g, b) => {
   (r /= 255), (g /= 255), (b /= 255);
 
-  let max = Math.max(r, g, b),
-    min = Math.min(r, g, b);
-  let h,
-    s,
-    l = (max + min) / 2;
+  let max = Math.max(r, g, b);
+  let min = Math.min(r, g, b);
 
-  if (max == min) h = s = 0;
-  else {
-    let d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  let l = (max + min) / 2;
+  let s = 0;
+  let h = 0;
+  if (max != min) {
+    if (l < 0.5) s = (max - min) / (max + min);
+    else s = (max - min) / (2.0 - max - min);
 
-    switch (max) {
-      case r:
-        h = (g - b) / d + (g < b ? 6 : 0);
-        break;
-      case g:
-        h = (b - r) / d + 2;
-        break;
-      case b:
-        h = (r - g) / d + 4;
-        break;
-    }
-
-    h /= 6;
+    if (r == max) h = (g - b) / (max - min);
+    else if (g == max) h = 2.0 + (b - r) / (max - min);
+    else h = 4.0 + (r - g) / (max - min);
   }
 
-  return { h: h.toFixed(2), s: s.toFixed(2), l: l.toFixed(2) };
+  l = l * 100;
+  s = s * 100;
+  h = h * 60;
+  if (h < 0) {
+    h += 360;
+  }
+
+  return {
+    h: h.toFixed(2),
+    s: s.toFixed(2) + "%",
+    l: l.toFixed(2) + "%"
+  };
 };
 
 const calculateLuminance = (r, g, b) => {
@@ -380,8 +251,87 @@ const wcagLevels = {
   }
 };
 
+function findClosestColorRGB(r, g, b, table) {
+  var rgb = { r: r, g: g, b: b };
+  var delta = 3 * 256 * 256;
+  var temp = { r: 0, g: 0, b: 0 };
+  var nameFound = "black";
+
+  for (i = 0; i < table.length; i++) {
+    temp = Hex2RGB(table[i].hex);
+    if (
+      Math.pow(temp.r - rgb.r, 2) +
+        Math.pow(temp.g - rgb.g, 2) +
+        Math.pow(temp.b - rgb.b, 2) <
+      delta
+    ) {
+      delta =
+        Math.pow(temp.r - rgb.r, 2) +
+        Math.pow(temp.g - rgb.g, 2) +
+        Math.pow(temp.b - rgb.b, 2);
+      nameFound = table[i].name;
+    }
+  }
+  return nameFound;
+}
+
+let colorHexArray = Array.from(Object.values(cssColorNames));
+let lastKnownClosestColor;
+
+const findNearestColor = hex => {
+  let rgba1 = hexToRGBA(hex);
+  let delta = FANCY_COLOR_NAMES == false ? 3 * 256 * 256 : 9 * 2332 * 2332;
+  let rgba2, result;
+
+  colorHexArray.forEach(colorInArray => {
+    rgba2 = hexToRGBA(colorInArray);
+
+    if (
+      Math.pow(rgba2.r - rgba1.r, 2) +
+        Math.pow(rgba2.g - rgba1.g, 2) +
+        Math.pow(rgba2.b - rgba1.b, 2) <
+      delta
+    ) {
+      delta =
+        Math.pow(rgba2.r - rgba1.r, 2) +
+        Math.pow(rgba2.g - rgba1.g, 2) +
+        Math.pow(rgba2.b - rgba1.b, 2);
+
+      lastKnownClosestColor = colorInArray;
+      result = colorInArray;
+    }
+
+    // deltar = Math.abs(rgba1.r - rgba2.r) + 15;
+    // deltag = Math.abs(rgba1.g - rgba2.g) + 15;
+    // deltab = Math.abs(rgba1.b - rgba2.b) + 15;
+
+    // if (deltar < 50 && deltag < 50 && deltab < 50) {
+    //   lastKnownClosestColor = colorInArray;
+    //   result = colorInArray;
+    // } else if (deltar < 55 && deltag < 55 && deltab < 55) {
+    //   lastKnownClosestColor = colorInArray;
+    //   result = colorInArray;
+    // } else if (deltar < 60 && deltag < 60 && deltab < 60) {
+    //   lastKnownClosestColor = colorInArray;
+    //   result = colorInArray;
+    // }
+  });
+
+  let results;
+
+  let colorToFind = result !== undefined ? result : lastKnownClosestColor;
+
+  for (let key in cssColorNames)
+    if (cssColorNames.hasOwnProperty(key))
+      if (cssColorNames[key].indexOf(colorToFind) != -1) results = key;
+
+  return results;
+};
+
 // this is called to update global colors every time a color slider is changed
 const setComputedColors = () => {
+  setColorNames();
+
   let bgrgb = getComputedStyle(colorDisplay).backgroundColor.match(
     /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/
   );
@@ -426,8 +376,8 @@ const setComputedColors = () => {
     hslBGVal.innerText = `hsl(${hslVals.h}, ${hslVals.s}, ${hslVals.l})`;
 
     bgCssName.innerText = bgColorName
-      ? `css name: ${bgColorName}`
-      : "css name: none";
+      ? `color name (actual): ${bgColorName.toLowerCase()}`
+      : `color name (closest): ${findNearestColor(defbgHex).toLowerCase()}`;
   } else if ((currentColorSetting = "text")) {
     hexBGVal.innerText = deftxtHex;
     rgbBGVal.innerText = `rgb(${deftxtRGB.r}, ${deftxtRGB.g}, ${deftxtRGB.b})`;
@@ -436,8 +386,8 @@ const setComputedColors = () => {
     })`;
 
     bgCssName.innerText = txtColorName
-      ? `css name: ${txtColorName}`
-      : "css name: none";
+      ? `color name (actual): ${txtColorName.toLowerCase()}`
+      : `color name (closest): ${findNearestColor(deftxtHex).toLowerCase()}`;
   }
 
   rBGVal.innerText = bgrgb[1];
@@ -486,43 +436,6 @@ const mobilecheck = () => {
       check = true;
   })(navigator.userAgent || navigator.vendor || window.opera);
   return check;
-};
-
-const mobileSetRandomColors = setRandomColors => {
-  if (typeof window.DeviceMotionEvent != "undefined") {
-    let sensitivity = 20;
-
-    let x1 = 0,
-      y1 = 0,
-      z1 = 0,
-      x2 = 0,
-      y2 = 0,
-      z2 = 0;
-
-    window.addEventListener(
-      "devicemotion",
-      e => {
-        console.log(e);
-        x1 = e.accelerationIncludingGravity.x;
-        y1 = e.accelerationIncludingGravity.y;
-        z1 = e.accelerationIncludingGravity.z;
-      },
-      false
-    );
-
-    setInterval(() => {
-      let change = Math.abs(x1 - x2 + y1 - y2 + z1 - z2);
-
-      if (change > sensitivity) {
-        console.log("device shaken");
-        setRandomColors();
-      }
-
-      x2 = x1;
-      y2 = y1;
-      z2 = z1;
-    }, 150);
-  }
 };
 
 // enable/disable scrolling

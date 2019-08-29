@@ -15,4 +15,5 @@ last update: 2019/8/27
 
 jxnblk for https://monochrome.jxnblk.com/,
 lea verou for https://github.com/LeaVerou/contrast-ratio/blob/gh-pages/contrast-ratio.js and https://contrast-ratio.com/,
-and daniel stern for http://danielstern.ca/range.css/#/
+daniel stern for http://danielstern.ca/range.css/#/,
+and jonathan neal for https://github.com/jonathantneal/color-names.

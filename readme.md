@@ -12,4 +12,7 @@ things I'll be adding in the coming months / weeks:
 - [ ] preview extra shades of current colors
 - [ ] refactoring my *filthy, nasty* scss
 - [ ] settings (exclude certain color ranges, change randomization parameters...?)
-- [ ] show approximate css color name even if the css color isn't *exactly* the same
+- [ ] show approximate css color name even if the css color isn't *exactly* the same (this is what I'm having trouble with, but sort of works)
+
+
+**AND *DEAR GOD* IF YOU KNOW HOW TO REPLACE A COLOR WITH A NEAREST MATCH FROM A GIVEN SET, *PLEASE* ENLIGHTEN ME. I have no clue what I'm doing with the "display closest color match" feature.**

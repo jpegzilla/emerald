@@ -105,11 +105,6 @@ window.onload = () => {
     updateTxt(ntxtRGB);
   };
 
-  // allow color randomization by shaking the phone
-  if (mobilecheck()) {
-    mobileSetRandomColors();
-  }
-
   document.body.onkeydown = e => {
     if (e.keyCode == 32) {
       e.preventDefault();
@@ -123,6 +118,10 @@ window.onload = () => {
       setRandomColors();
     }
   };
+
+  document
+    .getElementById("randomize-mobile")
+    .addEventListener("click", () => setRandomColors());
 
   for (let elem in bginputs) {
     if (bginputs.hasOwnProperty(elem)) {
@@ -202,6 +201,7 @@ window.onload = () => {
 const showBackgroundColor = document.getElementById("showBackgroundColor");
 const showTextColor = document.getElementById("showTextColor");
 const showColorPreviews = document.getElementById("showColorPreviews");
+const showFancyColorNames = document.getElementById("showFancyColorNames");
 
 showBackgroundColor.addEventListener("click", () => {
   currentColorSetting = currentColorSetting == "text" ? "background" : "text";
@@ -234,6 +234,21 @@ showColorPreviews.addEventListener("click", () => {
   } else if (showColorPreviews.innerText == "small color previews: off") {
     colorPreviews.classList.remove("visible");
   }
+});
+
+showFancyColorNames.addEventListener("click", () => {
+  showFancyColorNames.innerText =
+    showFancyColorNames.innerText == "css color names"
+      ? "fancy color names"
+      : "css color names";
+
+  if (FANCY_COLOR_NAMES == true) {
+    FANCY_COLOR_NAMES = false;
+  } else if (FANCY_COLOR_NAMES == false) {
+    FANCY_COLOR_NAMES = true;
+  }
+
+  setComputedColors();
 });
 
 // palette handling
