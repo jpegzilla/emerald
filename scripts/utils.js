@@ -251,31 +251,8 @@ const wcagLevels = {
   }
 };
 
-function findClosestColorRGB(r, g, b, table) {
-  var rgb = { r: r, g: g, b: b };
-  var delta = 3 * 256 * 256;
-  var temp = { r: 0, g: 0, b: 0 };
-  var nameFound = "black";
-
-  for (i = 0; i < table.length; i++) {
-    temp = Hex2RGB(table[i].hex);
-    if (
-      Math.pow(temp.r - rgb.r, 2) +
-        Math.pow(temp.g - rgb.g, 2) +
-        Math.pow(temp.b - rgb.b, 2) <
-      delta
-    ) {
-      delta =
-        Math.pow(temp.r - rgb.r, 2) +
-        Math.pow(temp.g - rgb.g, 2) +
-        Math.pow(temp.b - rgb.b, 2);
-      nameFound = table[i].name;
-    }
-  }
-  return nameFound;
-}
-
 let colorHexArray = Array.from(Object.values(cssColorNames));
+let fancyColorHexArray = Array.from(Object.values(objectFlip(colorLib)));
 let lastKnownClosestColor;
 
 const findNearestColor = hex => {
@@ -284,39 +261,60 @@ const findNearestColor = hex => {
   let rgba2, result;
   // let deltar, deltag, deltab;
 
-  colorHexArray.forEach(colorInArray => {
-    rgba2 = hexToRGBA(colorInArray);
+  if (FANCY_COLOR_NAMES === false) {
+    colorHexArray.forEach(colorInArray => {
+      rgba2 = hexToRGBA(colorInArray);
 
-    if (
-      Math.pow(rgba2.r - rgba1.r, 2) +
-        Math.pow(rgba2.g - rgba1.g, 2) +
-        Math.pow(rgba2.b - rgba1.b, 2) <
-      delta
-    ) {
-      delta =
+      if (
         Math.pow(rgba2.r - rgba1.r, 2) +
-        Math.pow(rgba2.g - rgba1.g, 2) +
-        Math.pow(rgba2.b - rgba1.b, 2);
+          Math.pow(rgba2.g - rgba1.g, 2) +
+          Math.pow(rgba2.b - rgba1.b, 2) <
+        delta
+      ) {
+        delta =
+          Math.pow(rgba2.r - rgba1.r, 2) +
+          Math.pow(rgba2.g - rgba1.g, 2) +
+          Math.pow(rgba2.b - rgba1.b, 2);
 
-      lastKnownClosestColor = colorInArray;
-      result = colorInArray;
-    }
+        lastKnownClosestColor = colorInArray;
+        result = colorInArray;
+      }
 
-    // deltar = Math.abs(rgba1.r - rgba2.r) + 15;
-    // deltag = Math.abs(rgba1.g - rgba2.g) + 15;
-    // deltab = Math.abs(rgba1.b - rgba2.b) + 15;
+      // deltar = Math.abs(rgba1.r - rgba2.r) + 15;
+      // deltag = Math.abs(rgba1.g - rgba2.g) + 15;
+      // deltab = Math.abs(rgba1.b - rgba2.b) + 15;
 
-    // if (deltar < 50 && deltag < 50 && deltab < 50) {
-    //   lastKnownClosestColor = colorInArray;
-    //   result = colorInArray;
-    // } else if (deltar < 55 && deltag < 55 && deltab < 55) {
-    //   lastKnownClosestColor = colorInArray;
-    //   result = colorInArray;
-    // } else if (deltar < 60 && deltag < 60 && deltab < 60) {
-    //   lastKnownClosestColor = colorInArray;
-    //   result = colorInArray;
-    // }
-  });
+      // if (deltar < 50 && deltag < 50 && deltab < 50) {
+      //   lastKnownClosestColor = colorInArray;
+      //   result = colorInArray;
+      // } else if (deltar < 55 && deltag < 55 && deltab < 55) {
+      //   lastKnownClosestColor = colorInArray;
+      //   result = colorInArray;
+      // } else if (deltar < 60 && deltag < 60 && deltab < 60) {
+      //   lastKnownClosestColor = colorInArray;
+      //   result = colorInArray;
+      // }
+    });
+  } else {
+    fancyColorHexArray.forEach(colorInArray => {
+      rgba2 = hexToRGBA(colorInArray);
+
+      if (
+        Math.pow(rgba2.r - rgba1.r, 2) +
+          Math.pow(rgba2.g - rgba1.g, 2) +
+          Math.pow(rgba2.b - rgba1.b, 2) <
+        delta
+      ) {
+        delta =
+          Math.pow(rgba2.r - rgba1.r, 2) +
+          Math.pow(rgba2.g - rgba1.g, 2) +
+          Math.pow(rgba2.b - rgba1.b, 2);
+
+        lastKnownClosestColor = colorInArray;
+        result = colorInArray;
+      }
+    });
+  }
 
   let results;
 
