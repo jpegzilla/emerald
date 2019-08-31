@@ -486,7 +486,6 @@ const enableScroll = () => {
 };
 
 const selectText = element => {
-  console.log(element, element instanceof Node);
   element = document.getElementById(element);
 
   if (document.body.createTextRange) {
@@ -500,7 +499,7 @@ const selectText = element => {
     selection.removeAllRanges();
     selection.addRange(range);
   } else {
-    console.warn("Could not select text in element: Unsupported browser.");
+    console.warn("could not select text in element: unsupported browser.");
   }
 };
 

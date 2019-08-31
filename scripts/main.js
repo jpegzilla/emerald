@@ -204,7 +204,8 @@ const showColorPreviews = document.getElementById("showColorPreviews");
 const showFancyColorNames = document.getElementById("showFancyColorNames");
 
 showBackgroundColor.addEventListener("click", () => {
-  currentColorSetting = currentColorSetting == "text" ? "background" : "text";
+  currentColorSetting =
+    currentColorSetting == "background" ? "background" : "background";
   showTextColor.classList = "";
   showBackgroundColor.classList = "";
   showTextColor.classList.add("inactive");
@@ -213,7 +214,7 @@ showBackgroundColor.addEventListener("click", () => {
 });
 
 showTextColor.addEventListener("click", () => {
-  currentColorSetting = currentColorSetting == "text" ? "background" : "text";
+  currentColorSetting = currentColorSetting == "text" ? "text" : "text";
   showTextColor.classList = "";
   showBackgroundColor.classList = "";
   showTextColor.classList.add("active");
