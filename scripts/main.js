@@ -1,4 +1,6 @@
 let defbgRGB, deftxtRGB, defbgHex, deftxtHex, colorObject;
+let firstPalette = true;
+let contrastRatiosSet = false;
 let currentColorSetting = "background";
 const colorDisplay = document.getElementById("color-field");
 const colorName = document.getElementsByClassName("color-name")[0];
@@ -12,7 +14,11 @@ const contrastRatioNumberDisplay = document.getElementById(
 const colorPicker = document.getElementsByClassName("color-picker")[0];
 const bgColorPreview = document.getElementById("bg-color-preview");
 const textColorPreview = document.getElementById("text-color-preview");
+const bgColorAltPreview = document.getElementById("bg-color-alt-preview");
+const textColorAltPreview = document.getElementById("text-color-alt-preview");
 const addToPalette = document.getElementById("add-to-palette");
+const openSettings = document.getElementById("open-settings");
+const swapColors = document.getElementById("swapColors");
 const paletteBarTemplate = document.getElementById("paletteBarTemplate");
 const palettePigmentTemplate = document.getElementById(
   "palettePigmentTemplate"
@@ -20,7 +26,16 @@ const palettePigmentTemplate = document.getElementById(
 const addNewPalette = document.getElementById("addNewPalette");
 const sliders = Array.from(document.querySelectorAll('input[type="range"]'));
 
+const modalContainer = document.getElementById("modal-container");
+const randomParamsStart = document.getElementById("randomParamsStart");
+const randomParamsEnd = document.getElementById("randomParamsEnd");
+const closeButton = document.getElementById("close-button");
+
 let urlParams = geturlvars();
+
+if (urlParams) {
+  console.log(urlParams);
+}
 
 disableScroll();
 
@@ -59,54 +74,154 @@ window.onload = () => {
   txtinputs.blue.value = deftxtRGB.b;
 
   // update colors and variables containing updated colors;
-  const updateBG = rgb => {
+  const updateBG = (rgb, scc = true) => {
     colorDisplay.style.backgroundColor = rgb;
     bgColorPreview.style.backgroundColor = rgb;
+    bgColorAltPreview.style.backgroundColor = rgb;
     sliders.forEach(inp => (inp.style.color = rgb));
 
-    setComputedColors();
+    if (scc == true) setComputedColors();
   };
 
-  const updateTxt = rgb => {
+  const updateTxt = (rgb, scc = true) => {
     colorName.style.color = rgb;
     contrastRatioDisplay.style.color = rgb;
     colorPicker.style.color = rgb;
     textColorPreview.style.backgroundColor = rgb;
+    textColorAltPreview.style.backgroundColor = rgb;
     addToPalette.style.color = rgb;
+    openSettings.style.color = rgb;
 
-    setComputedColors();
+    if (scc == true) setComputedColors();
   };
+
+  let randomParams = { start: "fail", end: "aaa" };
+
+  const setRandomParams = ({ start: start, end: end }) => {
+    if (!start && !end) {
+      randomParams.start = "fail";
+      randomParams.end = "aaa";
+    }
+    if (start) randomParams.start = start;
+    if (end) randomParams.end = end;
+  };
+
+  setRandomParams({ start: null, end: null });
+
+  // makes sure user parameters are valid and fixes them if not, then sets them to the
+  // randomParams object.
+  const fixParams = () => {
+    contrastRatiosSet = true;
+    let valueStart = randomParamsStart.value;
+    let valueEnd = randomParamsEnd.value;
+
+    let allRatios = ["fail", "aa large", "aa", "aaa"];
+
+    // if the starting parameter comes before the ending one
+    if (allRatios.indexOf(valueStart) > allRatios.indexOf(valueEnd)) {
+      let newEnd = valueStart;
+      let newStart = valueEnd;
+
+      randomParamsStart.value = allRatios[allRatios.indexOf(newStart)];
+      randomParamsEnd.value = allRatios[allRatios.indexOf(newEnd)];
+
+      valueEnd = newEnd;
+      valueStart = newStart;
+    }
+
+    setRandomParams({ start: valueStart, end: valueEnd });
+  };
+
+  randomParamsStart.addEventListener("input", fixParams);
+
+  randomParamsEnd.addEventListener("input", fixParams);
 
   const getRandomColor = () => {
     let letters = "0123456789ABCDEF";
     let color = "#";
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 6; i++)
       color += letters[Math.floor(Math.random() * 16)];
-    }
+
     return color;
   };
 
   const setRandomColors = () => {
-    let color1 = hexToRGBA(getRandomColor());
-    let color2 = hexToRGBA(getRandomColor());
+    let color1 = getRandomColor();
+    let color2 = getRandomColor();
 
-    let nbgRGB = `rgb(${color1.r}, ${color1.g}, ${color1.b})`;
-    let ntxtRGB = `rgb(${color2.r}, ${color2.g}, ${color2.b})`;
+    let color1RGB = hexToRGBA(color1);
+    let color2RGB = hexToRGBA(color2);
 
-    bginputs.red.value = color1.r;
-    bginputs.green.value = color1.g;
-    bginputs.blue.value = color1.b;
+    let nbgRGB = `rgb(${color1RGB.r}, ${color1RGB.g}, ${color1RGB.b})`;
+    let ntxtRGB = `rgb(${color2RGB.r}, ${color2RGB.g}, ${color2RGB.b})`;
 
-    txtinputs.red.value = color2.r;
-    txtinputs.green.value = color2.g;
-    txtinputs.blue.value = color2.b;
+    bginputs.red.value = color1RGB.r;
+    bginputs.green.value = color1RGB.g;
+    bginputs.blue.value = color1RGB.b;
 
-    updateBG(nbgRGB);
-    updateTxt(ntxtRGB);
+    txtinputs.red.value = color2RGB.r;
+    txtinputs.green.value = color2RGB.g;
+    txtinputs.blue.value = color2RGB.b;
+
+    if (contrastRatiosSet == true) {
+      let currentContrast = getContrastRatio(color1, color2);
+      let contrastRatioNumber = currentContrast.number;
+
+      let acceptableRatios = [randomParams.start, randomParams.end];
+      let allRatios = ["fail", "aa large", "aa", "aaa"];
+
+      for (let i in wcagLevels) {
+        for (let j in wcagLevels[i]) {
+          let levels = wcagLevels[i][j];
+          if (
+            contrastRatioNumber >= levels[0] &&
+            contrastRatioNumber <= levels[1]
+          ) {
+            let allRatiosCopy = [...allRatios];
+            acceptableRatios = Array.from(new Set([...acceptableRatios]));
+
+            const range = (start, end) => {
+              return new Array(end - start + 1)
+                .fill(undefined)
+                .map((_, b) => b + start);
+            };
+
+            const startIndex = allRatiosCopy.indexOf(acceptableRatios[0]);
+            const endIndex =
+              allRatiosCopy.indexOf(acceptableRatios[1]) !== -1
+                ? allRatiosCopy.indexOf(acceptableRatios[1])
+                : startIndex;
+
+            let itemsToGet = range(startIndex, endIndex);
+
+            let finalRatios = itemsToGet.map(item => allRatios[item]);
+
+            i = i.toLowerCase();
+
+            if (finalRatios.includes(i) == false) {
+              setRandomColors();
+            } else if (finalRatios.includes(i)) {
+              updateBG(nbgRGB);
+              updateTxt(ntxtRGB);
+              break;
+            }
+          }
+        }
+      }
+    } else {
+      updateBG(nbgRGB);
+      updateTxt(ntxtRGB);
+    }
   };
 
   document.body.onkeydown = e => {
-    if (e.keyCode == 32) {
+    if (e.keyCode == 32 && document.activeElement == document.body) {
+      e.preventDefault();
+    }
+  };
+
+  document.body.onkeyup = e => {
+    if (e.keyCode == 32 && document.activeElement == document.body) {
       e.preventDefault();
 
       if (document.getElementById("randomizeReminder")) {
@@ -145,6 +260,28 @@ window.onload = () => {
     }
   }
 
+  swapColors.addEventListener("click", () => {
+    bginputs.red.value = colorObject.text.rgb.r;
+    bginputs.green.value = colorObject.text.rgb.g;
+    bginputs.blue.value = colorObject.text.rgb.b;
+    txtinputs.red.value = colorObject.bg.rgb.r;
+    txtinputs.green.value = colorObject.bg.rgb.g;
+    txtinputs.blue.value = colorObject.bg.rgb.b;
+
+    let bRGB = `rgb(${bginputs.red.value}, ${bginputs.green.value}, ${
+      bginputs.blue.value
+    })`;
+
+    let tRGB = `rgb(${txtinputs.red.value}, ${txtinputs.green.value}, ${
+      txtinputs.blue.value
+    })`;
+
+    updateBG(bRGB, false);
+    updateTxt(tRGB, false);
+
+    setComputedColors();
+  });
+
   // scrolling stuff
 
   document.addEventListener("scroll", () => {
@@ -161,13 +298,19 @@ window.onload = () => {
       }
     };
 
+    const altColorPreview = document.getElementsByClassName(
+      "alt-color-display"
+    )[0];
+
     if (getScrollTop() > colorControls.offsetTop - 100) {
       header.classList.add("invert");
+      altColorPreview.classList.remove("hidden");
     } else if (
       getScrollTop() < colorControls.offsetTop - 100 &&
       header.classList.contains("invert")
     ) {
       header.classList.remove("invert");
+      altColorPreview.classList.add("hidden");
     }
   });
 
@@ -226,13 +369,13 @@ showColorPreviews.addEventListener("click", () => {
   const colorPreviews = document.getElementsByClassName("color-previews")[0];
 
   showColorPreviews.innerText =
-    showColorPreviews.innerText == "small color previews: off"
-      ? "small color previews: on"
-      : "small color previews: off";
+    showColorPreviews.innerText == "color previews: off"
+      ? "color previews: on"
+      : "color previews: off";
 
-  if (showColorPreviews.innerText == "small color previews: on") {
+  if (showColorPreviews.innerText == "color previews: on") {
     colorPreviews.classList.add("visible");
-  } else if (showColorPreviews.innerText == "small color previews: off") {
+  } else if (showColorPreviews.innerText == "color previews: off") {
     colorPreviews.classList.remove("visible");
   }
 });
@@ -252,27 +395,110 @@ showFancyColorNames.addEventListener("click", () => {
   setComputedColors();
 });
 
+const closeModal = () => {
+  return modalContainer.classList.contains("active")
+    ? modalContainer.classList.remove("active")
+    : false;
+};
+
+const openModal = () => {
+  return modalContainer.classList.contains("active")
+    ? false
+    : modalContainer.classList.add("active");
+};
+
+modalContainer.addEventListener("click", e => {
+  e.target == modalContainer ? closeModal() : false;
+});
+
+closeButton.addEventListener("click", closeModal, false);
+
+openSettings.addEventListener("click", () => openModal());
+
 // palette handling
 
 let currentPalette = 0;
 let paletteTotalCount = 0;
+let paletteCountActual = 0;
+
 const paletteContainer = document.getElementsByClassName(
   "palette-container"
 )[0];
 const copiedNotification = document.getElementById("copiedNotification");
 
+const exportPalette = palette => {
+  // get all colors in the palette, then make some sort of export thing
+  let exportingPalette = document.getElementsByClassName(palette.class)[0];
+
+  if (exportingPalette !== undefined) {
+    let paletteName = exportingPalette.children[0].getElementsByTagName(
+      "input"
+    )[0].value;
+
+    console.log("exporting");
+  }
+};
+
+const paletteControls = (palette, operation) => {
+  switch (operation) {
+    case "remove":
+      paletteCountActual--;
+      // animate the removal of palette bar
+      palette.classList.add("hide");
+      setTimeout(() => {
+        return palette.remove();
+      }, 500);
+
+    case "export":
+      return exportPalette(palette);
+    default:
+      return;
+  }
+};
+
 const addNewPaletteBar = () => {
   let newPaletteBar = paletteBarTemplate.cloneNode(true);
+  newPaletteBar.id = "";
   newPaletteBar.classList.add("palette-bar");
-  newPaletteBar.classList.add(`palette-${paletteContainer.children.length}`);
+  let selector = `palette-${paletteContainer.children.length}`;
+  newPaletteBar.classList.add(selector);
   paletteContainer.appendChild(newPaletteBar);
   currentPalette = paletteContainer.children.length - 1;
+
+  let paletteName = newPaletteBar.children[0].getElementsByTagName("input")[0];
+
+  paletteName.value = `untitled palette ${paletteCountActual}`;
+
+  paletteCountActual++;
+
+  let barToAffect = newPaletteBar;
+
+  let paletteObject = {
+    element: barToAffect,
+    class: selector
+  };
+
+  let exportButton = newPaletteBar.getElementsByClassName("export-palette")[0];
+  let deleteButton = newPaletteBar.getElementsByClassName("remove-palette")[0];
+
+  deleteButton.addEventListener("click", () =>
+    paletteControls(barToAffect, "remove")
+  );
+
+  if (exportButton) {
+    exportButton.addEventListener("click", () =>
+      paletteControls(paletteObject, "export")
+    );
+  }
+
   paletteTotalCount++;
 };
 
 const addColorToPalette = (bgColor, textColor) => {
   let pigment = palettePigmentTemplate.cloneNode(true);
+  pigment.id = "";
   let target = paletteContainer.children[currentPalette];
+  target.classList.remove("empty");
   pigment.classList.add("palette-pigment");
   pigment.classList.add(`palette-${target.children.length}`);
 
@@ -326,6 +552,11 @@ addToPalette.addEventListener("click", () => {
   if (paletteContainer.children.length == 0) addNewPaletteBar();
 
   addColorToPalette(bgColor, textColor);
+
+  if (firstPalette == true) {
+    scrollSmooth(window, "bottom");
+    firstPalette = false;
+  }
 });
 
 addNewPalette.addEventListener("click", () => {

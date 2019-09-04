@@ -9,6 +9,7 @@
   user-select: none;
   height: 100vh;
   width: 100vw;
+  min-width: 100vw;
   opacity: 1;
   transition: opacity 0.5s;
   background-color: $black;

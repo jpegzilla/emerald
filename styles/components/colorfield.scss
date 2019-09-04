@@ -1,0 +1,222 @@
+main {
+  #color-field {
+    display: flex;
+    flex-direction: row;
+    background-color: $emerald;
+    width: 100%;
+    height: auto;
+    flex-grow: 1;
+    position: relative;
+    padding: 5rem;
+    @media (max-width: $screen-small) {
+      padding: 5rem 2rem 2rem 2rem;
+    }
+
+    @media (max-width: $screen-miniscule) {
+      padding: 5rem 0.75rem 2rem 0.75rem;
+    }
+
+    .color-info {
+      width: auto;
+      flex-grow: 1;
+      height: 100%;
+    }
+
+    .color-previews {
+      &.visible {
+        opacity: 1;
+        transition: opacity 0.3s;
+        pointer-events: auto;
+      }
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      height: auto;
+      flex-grow: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: flex-end;
+
+      .alt-shades-container {
+        height: 100%;
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 4rem;
+
+        div {
+          height: 100%;
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+          border: 1px solid $white;
+
+          div {
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: green;
+            border: none;
+            font-family: $share-tech;
+            cursor: pointer;
+            color: $white;
+
+            &.shade-pigment + div {
+              border-top: 1px solid $white;
+            }
+          }
+        }
+
+        .bg-shades-container {
+          border-right: none;
+        }
+
+        .bg-shades-container + .text-shades-container {
+          border-left: 1px solid $white;
+        }
+      }
+
+      .small-box-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-end;
+        div {
+          border-right: 1px solid $white;
+          border-left: 1px solid $white;
+          border-top: 1px solid $white;
+          height: 8rem;
+          width: 8rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-family: $share-tech;
+          // box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+          span {
+            color: $white;
+            mix-blend-mode: difference;
+          }
+
+          &:nth-child(1) {
+            background-color: $emerald;
+          }
+
+          &:nth-child(2) {
+            background-color: $blue;
+          }
+        }
+        * + * {
+          border-bottom: 1px solid $white;
+          border-right: 1px solid $white;
+        }
+      }
+    }
+
+    @media (max-width: $screen-small) {
+      .color-previews,
+      #showColorPreviews,
+      #showFancyColorNames {
+        display: none;
+      }
+    }
+
+    .color-name {
+      color: $blue;
+      font-family: $share-tech;
+      font-size: 1rem;
+
+      @media (max-width: $screen-small) {
+        font-size: 0.8rem;
+      }
+
+      @media (max-width: $screen-tiny) {
+        font-size: 0.4rem;
+      }
+
+      span + span {
+        margin-left: 2rem;
+      }
+      .color-picker {
+        color: $blue;
+      }
+
+      span {
+        font-size: 1.25em;
+        @media (max-width: $screen-small) {
+          font-size: 1.4rem;
+        }
+        cursor: pointer;
+        user-select: none;
+
+        &.active {
+          text-decoration: underline;
+        }
+        &.inactive {
+          opacity: 0.5;
+        }
+      }
+      #hex-code {
+        font-size: 12em;
+      }
+
+      #rgb-code,
+      #hsl-code {
+        font-size: 1.5em;
+        line-height: 1.5;
+      }
+
+      #css-name {
+        font-size: 1.25em;
+        @media (max-width: $screen-small) {
+          font-size: 1.5em;
+        }
+      }
+
+      #rgb-code,
+      #hsl-code,
+      #css-name {
+        @media (max-width: $screen-tiny) {
+          font-size: 2.4em;
+        }
+      }
+    }
+
+    #contrast-ratio {
+      position: relative;
+      font-family: $share-tech;
+      font-size: 1.25rem;
+      line-height: 1.56;
+      margin-top: 2rem;
+      color: $blue;
+    }
+
+    .add-to-palette,
+    .open-settings {
+      position: relative;
+      font-size: 1.25rem;
+      line-height: 1.56;
+      margin-top: 1rem;
+      user-select: none;
+
+      span {
+        cursor: pointer;
+      }
+    }
+
+    #add-to-palette,
+    #open-settings {
+      color: $blue;
+      font-family: $share-tech;
+      text-decoration: underline;
+    }
+
+    .open-settings {
+      margin-top: auto;
+    }
+  }
+}

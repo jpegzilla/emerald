@@ -1,11 +1,16 @@
 const FILES_TO_CACHE = [
   "./",
+  "./favicon.ico",
+  "./manifest.json",
+  "./browserconfig.xml",
+  "./index.html",
   "./styles/main.min.css",
   "./scripts/main.min.js",
-  "./scripts/utils.min.js"
+  "./scripts/utils.min.js",
+  "./scripts/palettes.min.js"
 ];
 
-const CACHE_NAME = "emeraldCache_v0104";
+const CACHE_NAME = "emeraldCache_v0110";
 const cacheWhitelist = [CACHE_NAME];
 
 self.addEventListener("install", event => {

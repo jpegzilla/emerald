@@ -24,6 +24,11 @@ header {
       display: none;
     }
   }
+
+  @media (max-width: $screen-tiny) {
+    padding: 1rem;
+    font-size: 1.5rem;
+  }
   z-index: 9;
 
   span#randomizeReminder {

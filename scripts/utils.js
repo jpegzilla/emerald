@@ -17,6 +17,11 @@ let initColors = { background: "#50c878", text: "#eaeaea" };
 
 let currentColors = { background: "#50c878", text: "#eaeaea" };
 
+const backgroundShades = document.getElementsByClassName(
+  "bg-shades-container"
+)[0];
+const textShades = document.getElementsByClassName("text-shades-container")[0];
+
 const objectFlip = obj => {
   const ret = {};
   Object.keys(obj).forEach(key => {
@@ -43,8 +48,7 @@ const hexToColorName = (colors, hex) =>
   Object.keys(colors).find(key => colors[key] === hex);
 
 const hexToRGBA = hex => {
-  if (!hex || typeof hex != "string" || hex.length < 3)
-    throw new Error(hex, "is not a valid argument.");
+  if (!hex || typeof hex != "string" || hex.length < 3) return false;
   if (hex.split("").indexOf("#") == 0) {
     hex = hex.substring(1);
   }
@@ -139,7 +143,41 @@ const hslToRGB = (h, s, l) => {
     b = hueToRGB(p, q, h - 1 / 3);
   }
 
-  return { r: r * 255, g: g * 255, b: b * 255 };
+  return {
+    r: Math.round(r * 255),
+    g: Math.round(g * 255),
+    b: Math.round(b * 255)
+  };
+};
+
+const rgbToDHSL = (r, g, b) => {
+  (r /= 255), (g /= 255), (b /= 255);
+  var max = Math.max(r, g, b),
+    min = Math.min(r, g, b);
+  var h,
+    s,
+    l = (max + min) / 2;
+
+  if (max == min) {
+    h = s = 0; // achromatic
+  } else {
+    var d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      case b:
+        h = (r - g) / d + 4;
+        break;
+    }
+    h /= 6;
+  }
+
+  return { h: h, s: s, l: l };
 };
 
 const rgbToHSL = (r, g, b) => {
@@ -207,6 +245,37 @@ const getContrastRatio = (text, bg) => {
   )}`;
 
   return { number: contrastNum, string: contrastString };
+};
+
+const changeShade = (color, amount) => {
+  let usePound = false;
+
+  if (color[0] == "#") {
+    color = color.slice(1);
+    usePound = true;
+  }
+
+  let num = parseInt(color, 16);
+
+  let r = (num >> 16) + amount;
+
+  if (r > 255) r = 255;
+  else if (r < 0) r = 0;
+
+  let b = ((num >> 8) & 0x00ff) + amount;
+
+  if (b > 255) b = 255;
+  else if (b < 0) b = 0;
+
+  let g = (num & 0x0000ff) + amount;
+
+  if (g > 255) g = 255;
+  else if (g < 0) g = 0;
+
+  return (
+    (usePound ? "#" : "") +
+    String("000000" + (g | (b << 8) | (r << 16)).toString(16)).slice(-6)
+  );
 };
 
 const rgbToHex = (r, g, b) => `#${hex(r)}${hex(g)}${hex(b)}`;
@@ -327,6 +396,29 @@ const findNearestColor = hex => {
   return results;
 };
 
+// this is a method for allowing the user to copy a color swatch's contents by clicking on it
+const setColorSwatchListeners = () => {
+  const copyColor = (element, e) => {
+    e.preventDefault();
+    window.getSelection().selectAllChildren(element);
+    document.execCommand("copy");
+  };
+
+  Array.from(backgroundShades.children).forEach(element => {
+    element.addEventListener("click", e => {
+      copyColor(element, e);
+    });
+  });
+
+  Array.from(textShades.children).forEach(element => {
+    element.addEventListener("click", e => {
+      copyColor(element, e);
+    });
+  });
+};
+
+setColorSwatchListeners();
+
 // this is called to update global colors every time a color slider is changed
 const setComputedColors = () => {
   setColorNames();
@@ -419,6 +511,29 @@ const setComputedColors = () => {
     bg: { rgb: defbgRGB, hex: defbgHex },
     text: { rgb: deftxtRGB, hex: deftxtHex }
   };
+
+  const bgAlts = [colorObject.bg.hex];
+  const textAlts = [colorObject.text.hex];
+
+  for (let i = 1; i < 6; i++) {
+    let newShadeBg, newShadeText;
+
+    newShadeBg = changeShade(bgAlts[i - 1], -15);
+    newShadeText = changeShade(textAlts[i - 1], -15);
+
+    bgAlts.push(newShadeBg);
+    textAlts.push(newShadeText);
+  }
+
+  Array.from(backgroundShades.children).forEach((box, i) => {
+    box.style.backgroundColor = bgAlts[i];
+    box.children[0].textContent = bgAlts[i].toString();
+  });
+
+  Array.from(textShades.children).forEach((box, i) => {
+    box.style.backgroundColor = textAlts[i];
+    box.children[0].textContent = textAlts[i].toString();
+  });
 };
 
 const mobilecheck = () => {
@@ -523,4 +638,20 @@ const showUpdateMessage = () => {
   closeUpdateMessage.addEventListener("click", () =>
     updateMessage.classList.remove("visible")
   );
+};
+
+const scrollSmooth = (parent, target) => {
+  if (target == "bottom") {
+    parent.scrollTo({
+      behavior: "smooth",
+      left: 0,
+      top: document.body.scrollHeight
+    });
+  } else if (target instanceof Node) {
+    parent.scrollTo({
+      behavior: "smooth",
+      left: 0,
+      top: target.offsetTop
+    });
+  }
 };

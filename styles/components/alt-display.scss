@@ -1,0 +1,44 @@
+@import "./_vars";
+
+.alt-color-display {
+  &.hidden {
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  bottom: 0;
+  display: none;
+  height: 4rem;
+  left: 0;
+  min-width: 100vw;
+  opacity: 1;
+  padding: 1rem;
+  pointer-events: none;
+  position: fixed;
+  transition: opacity 0.3s;
+  z-index: 3;
+
+  div {
+    flex-grow: 1;
+    height: 100%;
+    width: auto;
+  }
+
+  #bg-color-alt-preview {
+    background-color: $emerald;
+    border-radius: 1rem 0 0 1rem;
+  }
+
+  #text-color-alt-preview {
+    background-color: $blue;
+    border-radius: 0 1rem 1rem 0;
+  }
+
+  div + div {
+    border-left: 1px solid $white;
+  }
+
+  @media (max-width: $screen-small) {
+    display: flex;
+  }
+}

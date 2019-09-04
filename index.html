@@ -71,6 +71,29 @@
     <div id="updateMessage"><span id="triggerUpdate">an update is available! click here to download it.</span> <span id="closeUpdateMessage">close</span></div>
   </div>
 
+  <div id="modal-container">
+    <div class="settings-box">
+      <div class="random-params">
+        <span>randomization contrast ratio limit:</span>
+        <select id="randomParamsStart">
+          <option>fail</option>
+          <option>aa large</option>
+          <option>aa</option>
+          <option>aaa</option>
+        </select>
+        <span>to</span>
+        <select id="randomParamsEnd">
+          <option>fail</option>
+          <option>aa large</option>
+          <option>aa</option>
+          <option selected>aaa</option>
+        </select>
+      </div>
+
+      <div id="close-button">close</div>
+    </div>
+  </div>
+
   <header id="header">
     <span id="randomizeReminder">press space to randomize</span>
     <b></b>
@@ -79,12 +102,23 @@
 
   <main>
 
+    <!-- alt-color-display -->
+
+    <div class="alt-color-display hidden">
+      <div id="bg-color-alt-preview">
+
+      </div>
+      <div id="text-color-alt-preview">
+
+      </div>
+    </div>
+
     <!-- show color info -->
 
     <div id="color-field">
       <div class="color-info">
         <div class="color-name">
-          <div class="color-picker"><span id="showBackgroundColor" class="active">background</span><span id="showTextColor" class="inactive">text</span><span id="showColorPreviews" class="inactive">small color previews: off</span><span id="showFancyColorNames"
+          <div class="color-picker"><span id="showBackgroundColor" class="active">background</span><span id="showTextColor" class="inactive">text</span><span id="showColorPreviews" class="inactive visible">color previews: off</span><span id="showFancyColorNames"
               class="inactive">css color names</span></div>
           <div id="hex-code"></div>
           <div id="rgb-code"></div>
@@ -96,16 +130,41 @@
           <div id="contrast-ratio-string"></div>
           <div id="contrast-ratio-number"></div>
         </div>
-        <div id="add-to-palette">add to palette</div>
+        <div class="add-to-palette"><span id="add-to-palette">add to palette</span></div>
+        <div class="open-settings"><span id="open-settings">open settings</span></div>
       </div>
 
       <div class="color-previews">
-        <div id="bg-color-preview"></div>
-        <div id="text-color-preview"></div>
+        <div class="alt-shades-container">
+          <div class="bg-shades-container">
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+          </div>
+          <div class="text-shades-container">
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+          </div>
+        </div>
+        <div class="small-box-container">
+          <div id="text-color-preview"></div>
+          <div id="bg-color-preview"></div>
+        </div>
       </div>
     </div>
 
     <div id="color-controls">
+      <div class="swap-color-container">
+        <div id="swapColors">swap colors &lrarr;</div>
+      </div>
+
       <div class="share-buttons">
         <div class="twitter-button">
           <a target="_blank" href="https://twitter.com/intent/tweet?source=https%3A%2F%2Fjpegzilla.com%2Femerald&text=emerald%20-%20a%20simple%20color%20palette%20tool%20https%3A%2F%2Fjpegzilla.com%2Femerald&via=jpegzilla" class="twitter-share-button"
@@ -124,15 +183,15 @@
       <div class="background-picker">
         <h1>background color.</h1>
         <div class="picker-group">
-          <span>red <span id="redBGValue"></span></span>
+          <p>red <span id="redBGValue"></span></p>
           <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="rInput">
         </div>
         <div class="picker-group">
-          <span>green <span id="greenBGValue"></span></span>
+          <p>green <span id="greenBGValue"></span></p>
           <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="gInput">
         </div>
         <div class="picker-group">
-          <span>blue <span id="blueBGValue"></span></span>
+          <p>blue <span id="blueBGValue"></span></p>
           <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="bInput">
         </div>
       </div>
@@ -143,15 +202,15 @@
 
         <h1>text color.</h1>
         <div class="picker-group">
-          <span>red <span id="redtxtValue"></span></span>
+          <p>red <span id="redtxtValue"></span></p>
           <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="trInput">
         </div>
         <div class="picker-group">
-          <span>green <span id="greentxtValue"></span></span>
+          <p>green <span id="greentxtValue"></span></p>
           <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="tgInput">
         </div>
         <div class="picker-group">
-          <span>blue <span id="bluetxtValue"></span></span>
+          <p>blue <span id="bluetxtValue"></span></p>
           <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="tbInput">
         </div>
       </div>
@@ -159,7 +218,7 @@
 
   </main>
 
-  <footer>
+  <footer id="paletteView">
     <h1>palettes. <span id="addNewPalette">add palette +</span></h1>
     <h2>click a color to copy it! <span id="copiedNotification">copied!</span></h2>
     <div class="palette-container">
@@ -174,7 +233,11 @@
   <div></div>
   <div></div>
 </div>
-<div id="paletteBarTemplate">
+<div id="paletteBarTemplate" class="empty">
+  <div class="palette-controls">
+    <!-- <span class="export-palette">export palette</span> -->
+    <span class="remove-palette">remove palette</span><input type="text" name="" value="">
+  </div>
 </div>
 
 <script src="./scripts/palettes.js" charset="utf-8"></script>
@@ -183,7 +246,7 @@
 
 <script type="text/javascript">
   window.isUpdateAvailable = new Promise((resolve, reject) => {
-    if ('serviceWorker' in navigator && 0 == 1) {
+    if ('serviceWorker' in navigator) {
       // register service worker file
       navigator.serviceWorker.register('./service-worker.js')
         .then(reg => {
