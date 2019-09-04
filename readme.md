@@ -23,3 +23,4 @@ Patch notes: v0105 03092019
 - added randomization params (set contrast ratio range)
 - added color swap button
 - added palette operations: naming, deleting...exporting coming soon
+- added color shade preview: shows 12 alternative shades of the current colors and their hex codes
