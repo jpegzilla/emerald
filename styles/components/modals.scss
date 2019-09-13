@@ -2,15 +2,23 @@
 
 #modal-container {
   align-items: center;
-  background-color: transparentize($white, 0.5);
+  background-color: transparentize($white, 1);
+  // background-color: transparentize($white, 0.5);
+
+  &.fadeBg {
+    transition: background-color 0.3s;
+    background-color: transparentize($white, 0.5);
+  }
+
   display: flex;
   justify-content: center;
   min-height: 100vh;
   min-width: 100vw;
   opacity: 0;
+  // opacity: 1;
   pointer-events: none;
   position: fixed;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s, background-color 0.3s;
   z-index: 50;
 
   &.active {
@@ -20,17 +28,15 @@
   }
 
   .settings-box {
-    background-color: $black;
-    font-family: $lexend;
-    color: $white;
-    border-radius: 0.5rem;
-    height: auto;
-    padding: 2rem 4rem;
-    width: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    @include modalBox;
+
+    .setting-bar + .setting-bar {
+      margin-top: 0.25rem;
+    }
+
+    select {
+      @include select;
+    }
 
     span + span,
     span + select,
@@ -38,53 +44,206 @@
       margin-left: 1rem;
     }
 
-    select {
-      font-family: $share-tech;
-      display: inline-block;
-      width: auto;
-      cursor: pointer;
-      padding: 0.25rem 0.5rem;
-      outline: 0;
-      border: 1px solid $emerald;
-      border-radius: 0.15rem 0.15rem 0 0;
-      background: $dgray;
-      color: $white;
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-    }
-    .select select::-ms-expand {
-      display: none;
-    }
-    .select select:hover,
-    .select select:focus {
-      color: $black;
-      background: $dgray;
-    }
-    .select select:disabled {
-      opacity: 0.5;
-      pointer-events: none;
-    }
+    @media (max-width: $screen-tiny) {
+      padding: 2rem;
+      font-size: 0.9em;
 
-    #close-button {
-      align-items: center;
-      background-color: $emerald;
-      border-radius: 0.5rem;
-      color: $white;
-      cursor: pointer;
-      display: flex;
-      font-family: $lexend;
-      justify-content: center;
-      margin-top: 3rem;
-      padding: 1rem 2rem;
-      text-decoration: underline;
-      transition: background-color 0.3s;
-      width: 100%;
-
-      &:hover {
-        background-color: darken($emerald, 10%);
-        transition: background-color 0.3s;
+      &:nth-child(1) span:nth-of-type(1)::after {
+        content: "\A";
+        white-space: pre;
       }
+
+      span + span,
+      span + select,
+      select + span {
+        margin-left: 0;
+      }
+
+      .setting-bar + .setting-bar {
+        margin-top: 1rem;
+      }
+    }
+
+    #close-settings {
+      @include button;
+    }
+
+    #report-bug {
+      @include button;
+      margin-top: 0.5rem;
+    }
+  }
+
+  .message-box {
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    width: 100vw;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 1rem 2rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+
+    &.active {
+      transition: opacity 0.3s;
+      pointer-events: auto;
+      opacity: 1;
+    }
+
+    &.error {
+      .message-bar {
+        border-left: 0.25rem solid $red;
+      }
+    }
+
+    .message-bar {
+      background-color: $white;
+      color: $black;
+      transition: background-color 0.3s, color 0.3s;
+
+      body.dark & {
+        background-color: $black;
+        color: $white;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.25rem 0.25rem 0.25rem 1rem;
+      border-radius: 0.25rem;
+      .message-inner {
+        font-family: $lexend;
+      }
+      #close-message {
+        background-color: $emerald;
+        color: $white;
+        font-family: $lexend;
+        padding: 0.25rem 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        &:hover {
+          background-color: darken($emerald, 10%);
+          transition: background-color 0.3s;
+        }
+      }
+
+      & div + div {
+        margin-left: 1rem;
+      }
+    }
+  }
+
+  .export-box {
+    @include modalBox;
+
+    .select-export-type {
+      select {
+        margin-left: 0.5rem;
+        @include select;
+      }
+    }
+
+    .export-item-container {
+      border: 1px solid $white;
+
+      border-radius: 0.15rem;
+      margin-top: 0.5rem;
+    }
+    isolation: isolate;
+    position: relative;
+    pointer-events: none;
+
+    &.active {
+      pointer-events: auto;
+    }
+
+    pre {
+      align-items: center;
+      background-color: $white;
+      color: $black;
+      display: flex;
+      justify-content: center;
+
+      position: relative;
+      transition: background-color 0.3s, color 0.3s;
+
+      &:nth-child(1) {
+        z-index: 3;
+      }
+      &:nth-child(2) {
+        z-index: 2;
+      }
+
+      body.dark & {
+        background-color: $dgray;
+        color: $white;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      &.active {
+        padding: 2rem 4rem;
+        @media (max-width: $screen-small) {
+          padding: 1rem 2rem;
+          font-size: 0.9em;
+        }
+        @media (max-width: $screen-tiny) {
+          padding: 0.5rem 2rem;
+          font-size: 0.7em;
+        }
+      }
+    }
+
+    figure {
+      margin: 0;
+
+      canvas {
+        padding: 0;
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        height: 32rem;
+        width: 60rem;
+        @media (max-width: $screen-tiny) {
+          height: 70vh;
+          width: 270px;
+        }
+      }
+    }
+
+    pre,
+    figure {
+      opacity: 0;
+      height: 0;
+      width: 0;
+      padding: 0;
+      pointer-events: none;
+      &.active {
+        opacity: 1;
+        transition: background-color 0.3s, color 0.3s;
+        pointer-events: auto;
+        height: auto;
+        width: auto;
+      }
+    }
+
+    &:not(.active) {
+      pre,
+      figure {
+        pointer-events: none;
+      }
+    }
+
+    #do-export,
+    #close-export {
+      @include button;
+    }
+
+    #close-export {
+      margin-top: 0.5rem;
     }
   }
 }

@@ -2,6 +2,8 @@ const documentTitle = document.title;
 
 let FANCY_COLOR_NAMES = false;
 
+let CURRENT_ERR = "";
+
 const LUM_LOWER = 0.03928;
 const LUM_DIVISOR_H = 12.92;
 const LUM_DIVISOR_L = 1.055;
@@ -12,6 +14,13 @@ const LUM_COEFF = 0.2126;
 const LUM_R_ADDEND = 0.7152;
 const LUM_G_ADDEND = 0.0722;
 const RGB_MAX = 255;
+
+let colorHistory = [];
+let colorHistoryIndex = 0;
+let initialColorHistory = true;
+
+let textLocked = false;
+let bgLocked = false;
 
 let initColors = { background: "#50c878", text: "#eaeaea" };
 
@@ -49,9 +58,13 @@ const hexToColorName = (colors, hex) =>
 
 const hexToRGBA = hex => {
   if (!hex || typeof hex != "string" || hex.length < 3) return false;
-  if (hex.split("").indexOf("#") == 0) {
-    hex = hex.substring(1);
-  }
+  if (hex.split("").indexOf("#") == 0) hex = hex.substring(1);
+
+  const acceptableCharacters = /^(?:[0-9a-fA-F]{3,8})$/;
+
+  if (!hex.match(acceptableCharacters))
+    throw new Error(`parameter '${hex}' is not a valid hex color.`);
+
   if (hex.length == 6) {
     let rgb = parseInt(hex, 16);
     let r = (rgb >> 16) & 0xff;
@@ -114,10 +127,7 @@ const hexToRGBA = hex => {
 
     return { r: r, g: g, b: b, a: a };
   } else {
-    throw new Error(
-      hex,
-      "is not valid, or you entered some weird format that I forgot about."
-    );
+    throw new Error(`parameter '${hex}' is not valid.`);
   }
 };
 
@@ -325,10 +335,13 @@ let fancyColorHexArray = Array.from(Object.values(objectFlip(colorLib)));
 let lastKnownClosestColor;
 
 const findNearestColor = hex => {
+  if (typeof hex !== "string")
+    throw new Error(
+      `findNearestColor needs a hex color in string format. the parameter passed was type ${typeof hex}.`
+    );
   let rgba1 = hexToRGBA(hex);
   let delta = FANCY_COLOR_NAMES == false ? 3 * 256 * 256 : 9 * 2332 * 2332;
   let rgba2, result;
-  // let deltar, deltag, deltab;
 
   if (FANCY_COLOR_NAMES === false) {
     colorHexArray.forEach(colorInArray => {
@@ -348,21 +361,6 @@ const findNearestColor = hex => {
         lastKnownClosestColor = colorInArray;
         result = colorInArray;
       }
-
-      // deltar = Math.abs(rgba1.r - rgba2.r) + 15;
-      // deltag = Math.abs(rgba1.g - rgba2.g) + 15;
-      // deltab = Math.abs(rgba1.b - rgba2.b) + 15;
-
-      // if (deltar < 50 && deltag < 50 && deltab < 50) {
-      //   lastKnownClosestColor = colorInArray;
-      //   result = colorInArray;
-      // } else if (deltar < 55 && deltag < 55 && deltab < 55) {
-      //   lastKnownClosestColor = colorInArray;
-      //   result = colorInArray;
-      // } else if (deltar < 60 && deltag < 60 && deltab < 60) {
-      //   lastKnownClosestColor = colorInArray;
-      //   result = colorInArray;
-      // }
     });
   } else {
     fancyColorHexArray.forEach(colorInArray => {
@@ -396,6 +394,52 @@ const findNearestColor = hex => {
   return results;
 };
 
+const findNearestAAAColor = (background, text, nearestTo = "text") => {
+  // get current contrast ratio
+  let currCr = getContrastRatio(text, background).number;
+  // return same colors if it's already a ratio >= 7
+  if (currCr >= 7) return { background: background, text: text };
+
+  let nearestAAAColor;
+  // get rgb values for background and foreground
+  background = text.replace(/^\s*#|\s*$/g, "");
+  text = text.replace(/^\s*#|\s*$/g, "");
+
+  // function to change the brightness of a color
+
+  const changeBrightness = (hex, percent) => {
+    let r = parseInt(hex.substring(0, 2), 16),
+      g = parseInt(hex.substring(2, 4), 16),
+      b = parseInt(hex.substring(4), 16);
+
+    return (
+      "#" +
+      (0 | ((1 << 8) + r + ((256 - r) * percent) / 100))
+        .toString(16)
+        .substring(1) +
+      (0 | ((1 << 8) + g + ((256 - g) * percent) / 100))
+        .toString(16)
+        .substring(1) +
+      (0 | ((1 << 8) + b + ((256 - b) * percent) / 100))
+        .toString(16)
+        .substring(1)
+    );
+  };
+
+  changeBrightness(background, 10);
+
+  // get brightness of both colors
+
+  // if contrast ratio is not aaa... (nearestTo is the color that will be changed)
+
+  while (currCr < 7) {
+    break;
+  }
+
+  return nearestTo == "background"
+    ? { background: nearestAAAColor, text: text }
+    : { background: background, text: nearestAAAColor };
+};
 // this is a method for allowing the user to copy a color swatch's contents by clicking on it
 const setColorSwatchListeners = () => {
   const copyColor = (element, e) => {
@@ -420,7 +464,7 @@ const setColorSwatchListeners = () => {
 setColorSwatchListeners();
 
 // this is called to update global colors every time a color slider is changed
-const setComputedColors = () => {
+const setComputedColors = (pushToHistory = false) => {
   setColorNames();
 
   let bgrgb = getComputedStyle(colorDisplay).backgroundColor.match(
@@ -430,6 +474,27 @@ const setComputedColors = () => {
   let txtrgb = getComputedStyle(colorName).color.match(
     /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/
   );
+
+  let f = bgrgb;
+
+  let background = {
+    r: f[1],
+    g: f[2],
+    b: f[3]
+  };
+
+  let contrast = Math.round(
+    (parseInt(background.r) * 299 +
+      parseInt(background.g) * 587 +
+      parseInt(background.b) * 114) /
+      1000
+  );
+
+  if (contrast > 125 && header.classList.contains("black") == false) {
+    header.classList.add("black");
+  } else if (contrast < 125 && header.classList.contains("black") == true) {
+    header.classList.remove("black");
+  }
 
   defbgRGB = { r: bgrgb[1], g: bgrgb[2], b: bgrgb[3] };
   defbgHex = rgbToHex(defbgRGB.r, defbgRGB.g, defbgRGB.b);
@@ -507,10 +572,22 @@ const setComputedColors = () => {
     }
   }
 
+  let oldColorObject = colorObject;
+
   colorObject = {
     bg: { rgb: defbgRGB, hex: defbgHex },
     text: { rgb: deftxtRGB, hex: deftxtHex }
   };
+
+  if (initialColorHistory == true && pushToHistory == true) {
+    initialColorHistory = false;
+    colorHistory.push(colorObject);
+  }
+
+  if (oldColorObject != undefined && pushToHistory == true) {
+    colorHistory.push(colorObject);
+    colorHistoryIndex++;
+  }
 
   const bgAlts = [colorObject.bg.hex];
   const textAlts = [colorObject.text.hex];
@@ -521,18 +598,57 @@ const setComputedColors = () => {
     newShadeBg = changeShade(bgAlts[i - 1], -15);
     newShadeText = changeShade(textAlts[i - 1], -15);
 
-    bgAlts.push(newShadeBg);
-    textAlts.push(newShadeText);
+    if (newShadeBg == "#000000") {
+      newShadeBg = changeShade(bgAlts[0], 15);
+      bgAlts.unshift(newShadeBg);
+    } else bgAlts.push(newShadeBg);
+
+    if (newShadeText == "#000000") {
+      newShadeText = changeShade(textAlts[0], 15);
+      textAlts.unshift(newShadeText);
+    } else textAlts.push(newShadeText);
   }
+
+  // function determines the lightness of the background of the alternative shades
+  // and uses that information to determine whether the text in the alternative
+  // shade box should be black or white
+  const manageBoxTextColor = box => {
+    let f = getComputedStyle(box)["background-color"].match(
+      /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/
+    );
+
+    let background = {
+      r: f[1],
+      g: f[2],
+      b: f[3]
+    };
+
+    let contrast = Math.round(
+      (parseInt(background.r) * 299 +
+        parseInt(background.g) * 587 +
+        parseInt(background.b) * 114) /
+        1000
+    );
+
+    if (contrast > 125 && box.classList.contains("blackText") == false) {
+      box.classList.add("blackText");
+      header.classList.add("black");
+    } else if (contrast < 125 && box.classList.contains("blackText") == true) {
+      box.classList.remove("blackText");
+      header.classList.remove("black");
+    }
+  };
 
   Array.from(backgroundShades.children).forEach((box, i) => {
     box.style.backgroundColor = bgAlts[i];
     box.children[0].textContent = bgAlts[i].toString();
+    manageBoxTextColor(box);
   });
 
   Array.from(textShades.children).forEach((box, i) => {
     box.style.backgroundColor = textAlts[i];
     box.children[0].textContent = textAlts[i].toString();
+    manageBoxTextColor(box);
   });
 };
 
@@ -619,11 +735,10 @@ const selectText = element => {
 };
 
 const geturlvars = () => {
-  var c = {};
-  window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(a, d) {
-    c[a] = d;
-  });
-  return c;
+  let vars = {};
+  let regex = /[?&]+([^=&]+)=([^&]*)/gi;
+  window.location.href.replace(regex, (match, key, val) => (vars[key] = val));
+  return vars;
 };
 
 const updateMessage = document.getElementById("updateMessage");
@@ -654,4 +769,30 @@ const scrollSmooth = (parent, target) => {
       top: target.offsetTop
     });
   }
+};
+
+const propSort = prop => {
+  let order = 1;
+
+  if (prop[0] === "-") {
+    order = -1;
+    prop = prop.substring(1);
+  }
+
+  return (a, b) =>
+    order == -1
+      ? b[prop].localeCompare(a[prop])
+      : a[prop].localeCompare(b[prop]);
+};
+
+const toCamelCase = string =>
+  string
+    .replace(
+      /(?:^\w|[A-Z]|\b\w)/g,
+      (word, index) => (index == 0 ? word.toLowerCase() : word.toUpperCase())
+    )
+    .replace(/\s+/g, "");
+
+window.onresize = () => {
+  getAllUnits();
 };

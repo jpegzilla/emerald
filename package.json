@@ -1,0 +1,26 @@
+{
+  "name": "emerald",
+  "version": "1.0.0",
+  "description": "[emerald](https://jpegzilla.com/emerald) is pretty simple. I just made it mainly to combine three of my favorite color tools &mdash; [monochrome](https://monochrome.jxnblk.com/), [contrast-ratio](https://contrast-ratio.com/), and [coolors](https://coolors.co/app).",
+  "main": "index.html",
+  "dependencies": {},
+  "devDependencies": {
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.8"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode production --display-error-details"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpegzilla/emerald.git"
+  },
+  "keywords": [],
+  "author": "jpegzilla",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jpegzilla/emerald/issues"
+  },
+  "homepage": "https://jpegzilla.com/emerald"
+}

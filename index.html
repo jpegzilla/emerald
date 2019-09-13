@@ -73,8 +73,8 @@
 
   <div id="modal-container">
     <div class="settings-box">
-      <div class="random-params">
-        <span>randomization contrast ratio limit:</span>
+      <div class="setting-bar random-params">
+        <span>randomization contrast ratio limits:</span>
         <select id="randomParamsStart">
           <option>fail</option>
           <option>aa large</option>
@@ -90,7 +90,46 @@
         </select>
       </div>
 
-      <div id="close-button">close</div>
+      <div class="setting-bar dark-mode-switch">
+        <span>emerald theme:</span>
+        <select id="themeSelect">
+          <option>dark</option>
+          <option>light</option>
+        </select>
+      </div>
+
+
+      <div id="close-settings">ok!</div>
+      <a target="_blank" id="report-bug" href="https://github.com/jpegzilla/emerald/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5Bbug%5D">report bug!</a>
+    </div>
+
+    <div class="message-box">
+      <div class="message-bar">
+        <div class="message-inner"></div>
+        <div id="close-message">ok!</div>
+      </div>
+    </div>
+
+    <div class="export-box">
+      <div class="select-export-type">
+        <span>select export type: </span>
+        <select id="selectExportType">
+          <option>sass</option>
+          <option>css</option>
+          <option>image</option>
+        </select>
+      </div>
+
+      <div class="export-item-container">
+        <pre id="sass-text-container"></pre>
+        <pre id="css-text-container"></pre>
+        <figure id="image-export-container">
+          <canvas id="export-canvas"></canvas>
+        </figure>
+      </div>
+
+      <div id="do-export">export!</div>
+      <div id="close-export">cancel</div>
     </div>
   </div>
 
@@ -162,7 +201,10 @@
 
     <div id="color-controls">
       <div class="swap-color-container">
-        <div id="swapColors">swap colors &lrarr;</div>
+        <div class="control-button" id="swapColors">swap colors &lrarr;</div>
+        <div class="control-button disabled" id="undo">undo &olarr;</div>
+        <div id="randomize-mobile">randomize &#10542;</div>
+        <div class="control-button disabled" id="redo">redo &orarr;</div>
       </div>
 
       <div class="share-buttons">
@@ -175,13 +217,11 @@
           <a target="_blank" class="github-button" href="https://github.com/jpegzilla/emerald" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star jpegzilla/emerald on GitHub">Star</a>
         </div>
       </div>
-      <div class="randomize-button">
-        <div id="randomize-mobile">randomize!</div>
-      </div>
+
       <!-- pick background color -->
 
       <div class="background-picker">
-        <h1>background color.</h1>
+        <h1><span class="lockColor" id="lockBackground">&#x1F513;</span> background color.</h1>
         <div class="picker-group">
           <p>red <span id="redBGValue"></span></p>
           <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="rInput">
@@ -200,18 +240,18 @@
 
       <div class="text-picker">
 
-        <h1>text color.</h1>
+        <h1><span class="lockColor" id="lockText">&#x1F513;</span> text color.</h1>
         <div class="picker-group">
           <p>red <span id="redtxtValue"></span></p>
-          <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="trInput">
+          <input data-color="rgb(80, 200, 120)" class="colortxtInput" type="range" min="0" max="255" step="1" id="trInput">
         </div>
         <div class="picker-group">
           <p>green <span id="greentxtValue"></span></p>
-          <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="tgInput">
+          <input data-color="rgb(80, 200, 120)" class="colortxtInput" type="range" min="0" max="255" step="1" id="tgInput">
         </div>
         <div class="picker-group">
           <p>blue <span id="bluetxtValue"></span></p>
-          <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="tbInput">
+          <input data-color="rgb(80, 200, 120)" class="colortxtInput" type="range" min="0" max="255" step="1" id="tbInput">
         </div>
       </div>
     </div>
@@ -229,19 +269,25 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
 
+<div id="hiddenElements"></div>
+
 <div id="palettePigmentTemplate">
   <div></div>
   <div></div>
 </div>
 <div id="paletteBarTemplate" class="empty">
   <div class="palette-controls">
-    <!-- <span class="export-palette">export palette</span> -->
-    <span class="remove-palette">remove palette</span><input type="text" name="" value="">
+    <span class="export-palette">export palette</span>
+    <span class="remove-palette">remove palette</span><span class='palette-number'></span>
   </div>
 </div>
 
+<script src="./scripts/saltlines.ruler.js" charset="utf-8"></script>
 <script src="./scripts/palettes.js" charset="utf-8"></script>
+<script src="./scripts/canvasOperations.js" charset="utf-8"></script>
+<script src="./scripts/smUtils.js" charset="utf-8"></script>
 <script src="./scripts/utils.js" charset="utf-8"></script>
+<script src="./scripts/paletteOperations.js" charset="utf-8"></script>
 <script src="./scripts/main.js" charset="utf-8"></script>
 
 <script type="text/javascript">

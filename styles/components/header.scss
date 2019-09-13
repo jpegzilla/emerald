@@ -5,6 +5,11 @@ header {
     filter: invert(1);
     transition: filter 0.3s;
   }
+
+  body.dark &.invert {
+    filter: invert(1);
+  }
+
   filter: invert(0);
   transition: filter 0.3s;
   width: 100vw;
@@ -15,6 +20,7 @@ header {
   right: 0;
   font-family: $lexend;
   pointer-events: none;
+  user-select: none;
   font-size: 2rem;
   padding: 2rem 5rem;
   @media (max-width: $screen-small) {
@@ -34,10 +40,15 @@ header {
   span#randomizeReminder {
     &.hidden {
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: opacity 0.3s color 0.2s;
     }
     font-size: 0.65em;
     color: $white;
+  }
+
+  &.black span#randomizeReminder {
+    color: $black;
+    transition: opacity 0.3s color 0.2s;
   }
 
   b {
@@ -52,6 +63,7 @@ header {
     display: flex;
     flex-direction: column;
     color: $white;
+    transition: color 0.2s;
     span {
       @media (display-mode: standalone) {
         display: none;
@@ -61,5 +73,28 @@ header {
       pointer-events: auto;
       cursor: pointer;
     }
+  }
+
+  &.black span {
+    color: $black;
+    transition: color 0.2s;
+  }
+
+  body.dark &.invert.black,
+  body.dark &.invert {
+    span {
+      color: $white;
+    }
+    filter: invert(0);
+    transition: color 0.2s;
+  }
+
+  body &.invert.black,
+  body &.invert {
+    span {
+      color: $black;
+    }
+    filter: invert(0);
+    transition: color 0.2s;
   }
 }

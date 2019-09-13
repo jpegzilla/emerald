@@ -5,10 +5,107 @@ $lexend: "Lexend Deca", sans-serif;
 
 $emerald: #50c878;
 $dgray: #4d5057;
+$mgray: #959595;
 $white: #eaeaea;
+$lgray: #d4d7d6;
 $black: #030303;
+$black2: #2a2a2a;
 $blue: #1b0758;
+$red: #ca1811;
 
 $screen-small: 1300px;
 $screen-tiny: 900px;
 $screen-miniscule: 400px;
+
+@mixin modalBox {
+  background-color: $white;
+  border-radius: 0.5rem;
+  border: 1px solid $black;
+  color: $black;
+  display: flex;
+  flex-direction: column;
+  font-family: $lexend;
+  height: auto;
+  justify-content: center;
+  opacity: 0;
+  padding: 1rem;
+  pointer-events: none;
+  position: absolute;
+  transition: color 0.3s, background-color 0.3s opacity 0.3s;
+  width: auto;
+
+  &.active {
+    opacity: 1;
+    pointer-events: auto;
+    transition: color 0.3s, background-color 0.3s opacity 0.3s;
+  }
+
+  body.dark & {
+    color: $white;
+    background-color: $black;
+    transition: color 0.3s, background-color 0.3s opacity 0.3s;
+  }
+}
+
+@mixin button {
+  align-items: center;
+  background-color: $emerald;
+  border-radius: 0.5rem;
+  color: $black;
+  cursor: pointer;
+  display: flex;
+  font-family: $lexend;
+  justify-content: center;
+  margin-top: 2rem;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s;
+  width: 100%;
+
+  &:hover {
+    background-color: darken($emerald, 10%);
+    transition: background-color 0.3s;
+  }
+}
+
+@mixin select {
+  font-family: $share-tech;
+  display: inline-block;
+  width: auto;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  outline: 0;
+  border: 1px solid $emerald;
+  border-radius: 0.25rem;
+  background-color: $lgray;
+  color: $dgray;
+  transition: color 0.3s, background-color 0.3s;
+  body.dark & {
+    background-color: $dgray;
+    color: $white;
+    transition: color 0.3s, background-color 0.3s;
+  }
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  &::-ms-expand {
+    display: none;
+  }
+  &:hover,
+  &:focus {
+    color: $white;
+    background: $dgray;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  @media (max-width: $screen-tiny) {
+    & {
+      font-size: 0.8em;
+      padding: 0.15rem 0.25rem;
+    }
+  }
+}

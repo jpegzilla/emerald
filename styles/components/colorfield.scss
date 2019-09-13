@@ -60,11 +60,20 @@ main {
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: green;
             border: none;
             font-family: $share-tech;
             cursor: pointer;
-            color: $white;
+
+            &.shade-pigment {
+              background-color: $black;
+              transition: background-color 0.2s, color 0.3s;
+              color: $white;
+
+              &.blackText {
+                color: $black;
+                transition: background-color 0.2s, color 0.3s;
+              }
+            }
 
             &.shade-pigment + div {
               border-top: 1px solid $white;
@@ -96,7 +105,6 @@ main {
           justify-content: center;
           align-items: center;
           font-family: $share-tech;
-          // box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
           span {
             color: $white;
             mix-blend-mode: difference;

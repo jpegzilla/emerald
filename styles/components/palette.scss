@@ -44,15 +44,9 @@
         padding: 0.5rem 0.25rem 0 0.25rem;
       }
 
-      input {
-        font-family: $share-tech;
-        font-size: 1.2rem;
-        color: #fff;
-        mix-blend-mode: exclusion;
-        border: none;
-        background-color: transparentize($dgray, 0.8);
-        text-align: center;
-        outline: none;
+      .palette-number {
+        cursor: auto;
+        text-decoration: none;
       }
 
       @media (max-width: $screen-small) {
@@ -91,6 +85,11 @@
     width: auto;
     div {
       color: $white;
+
+      &.blackText {
+        color: $black;
+      }
+
       display: flex;
       justify-content: center;
       align-items: center;
@@ -99,10 +98,10 @@
       flex-grow: 1;
       &:nth-child(1) {
         border-right: 1px solid $white;
-        border-radius: 1rem 0 0 1rem;
+        border-radius: 0.15rem 0 0 0.15rem;
       }
       &:nth-child(2) {
-        border-radius: 0 1rem 1rem 0;
+        border-radius: 0 0.15rem 0.15rem 0;
       }
     }
   }
@@ -119,4 +118,67 @@
 #paletteBarTemplate,
 #palettePigmentTemplate {
   display: none;
+}
+
+footer {
+  width: 100%;
+  height: auto;
+  padding: 2rem 5rem 5rem 5rem;
+  @media (max-width: $screen-tiny) {
+    padding: 2rem 2rem 5rem 2rem;
+  }
+
+  @media (max-width: $screen-miniscule) {
+    padding: 2rem 1rem 5rem 1rem;
+  }
+
+  position: relative;
+  background-color: $white;
+  color: $black;
+  transition: color 0.3s, background-color 0.3s;
+
+  body.dark & {
+    background-color: $black2;
+    color: $white;
+    transition: color 0.3s, background-color 0.3s;
+  }
+
+  #addNewPalette {
+    cursor: pointer;
+    font-size: 1.25rem;
+    margin-left: 1rem;
+    text-decoration: underline;
+  }
+
+  h1,
+  h2 {
+    font-family: $lexend;
+    user-select: none;
+    font-size: 1.5em;
+  }
+
+  h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.15em;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: $screen-small) {
+    h2 {
+      margin-bottom: 5rem;
+    }
+  }
+
+  #copiedNotification {
+    &.copied {
+      opacity: 1;
+      transition: opacity 0.1s;
+    }
+
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
 }
