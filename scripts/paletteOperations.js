@@ -396,8 +396,9 @@ const loadSavedPalettes = () => {
   });
 };
 
-if (PALETTES[0].length != 0) loadSavedPalettes();
-
+if (PALETTES && PALETTES.length > 0) {
+  if (PALETTES[0].length != 0) loadSavedPalettes();
+}
 const showCopyNotification = () => {
   copiedNotification.classList.add("copied");
   setTimeout(() => {
@@ -427,7 +428,7 @@ const addNewPaletteBar = (bgHex, textHex, alsoAddPigment = true) => {
 
   paletteHumanIndex++;
 
-  if (alsoAddPigment == true) addPigment(newPaletteBar, bgHex, textHex);
+  if (alsoAddPigment == true) addPigment(newPaletteBar, bgHex, textHex, true);
 
   let exportButton = newPaletteBar.getElementsByClassName("export-palette")[0];
   let deleteButton = newPaletteBar.getElementsByClassName("remove-palette")[0];
@@ -443,13 +444,27 @@ const addNewPaletteBar = (bgHex, textHex, alsoAddPigment = true) => {
   if (PALETTES[0].length > 0) paletteTotalCount++;
 };
 
-const addPigment = (paletteBar, bgHex, textHex) => {
+const addPigment = (paletteBar, bgHex, textHex, saveColor = false) => {
   let pigmentContainer = palettePigmentTemplate.cloneNode(true);
 
   pigmentContainer.children[0].style.backgroundColor = bgHex;
   pigmentContainer.children[1].style.backgroundColor = textHex;
   pigmentContainer.children[0].textContent = bgHex;
   pigmentContainer.children[1].textContent = textHex;
+
+  let bgColor = hexToRGBA(bgHex);
+  let textColor = hexToRGBA(textHex);
+
+  if (saveColor == true) {
+    let localColorObject = {
+      bg: { hex: bgHex, rgb: bgColor },
+      text: { hex: textHex, rgb: textColor }
+    };
+    currentPalette++;
+    PALETTES.push([]);
+    PALETTES[currentPalette].push(localColorObject);
+    savePaletteState();
+  }
 
   setPigmentTextColor(pigmentContainer);
 
@@ -514,4 +529,6 @@ addToPalette.addEventListener("click", () => {
   }
 });
 
-addNewPalette.addEventListener("click", () => addNewPaletteBar());
+addNewPalette.addEventListener("click", () =>
+  addNewPaletteBar(colorObject.bg.hex, colorObject.text.hex)
+);

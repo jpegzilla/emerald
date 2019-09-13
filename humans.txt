@@ -9,7 +9,7 @@ email: eli(at)jpegzilla(dot)com
 
 standards: HTML5, CSS3, ES6, SASS
 software: Atom, Chrome
-last update: 2019/8/27
+last update: 2019/9/13
 
 /* THANKS */
 
