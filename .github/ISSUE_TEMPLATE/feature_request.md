@@ -3,7 +3,7 @@ name: Feature request
 about: tell me something I should add
 title: "[new feature]"
 labels: enhancement
-assignees: ''
+assignees: jpegzilla
 
 ---
 

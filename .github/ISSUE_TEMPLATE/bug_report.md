@@ -3,7 +3,7 @@ name: Bug report
 about: make a report to help me out please
 title: "[bug]"
 labels: bug
-assignees: ''
+assignees: jpegzilla
 
 ---
 
