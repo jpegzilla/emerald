@@ -792,7 +792,3 @@ const toCamelCase = string =>
       (word, index) => (index == 0 ? word.toLowerCase() : word.toUpperCase())
     )
     .replace(/\s+/g, "");
-
-window.onresize = () => {
-  getAllUnits();
-};

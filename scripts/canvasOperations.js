@@ -10,9 +10,6 @@ let currentExportObject;
 
 let expCtx = exportCanvas.getContext("2d", { alpha: false });
 
-// saltlines get all units
-getAllUnits();
-
 const fixDPI = () => {
   //get CSS height
   //the + prefix casts it to an integer

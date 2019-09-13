@@ -5,7 +5,13 @@ const FILES_TO_CACHE = [
   "./browserconfig.xml",
   "./index.html",
   "./styles/main.min.css",
-  "./dist/main.js"
+  // "./dist/main.js",
+  "./scripts/main.js",
+  "./scripts/canvasOperations.js",
+  "./scripts/paletteOperations.js",
+  "./scripts/palettes.js",
+  "./scripts/smUtils.js",
+  "./scripts/utils.js"
 ];
 
 const EMERALD_VERSION = "v0111";
