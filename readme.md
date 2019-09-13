@@ -19,6 +19,7 @@ things I'll be adding in the coming months / weeks:
 - [ ] add accessibility features such as simpler keyboard controls
 - [ ] there are issues with re-rendering the palette export canvas at certain viewport breakpoints that I literally have no clue how to fix and I can't tell what's causing them. I might fix those someday
 - [ ] make another color preview box that shows a nearby wcag aaa color combination
+- [ ] refactoring to effectively use webpack
 
 **patch notes: v0110 03092019**
 - added more compact sliders
@@ -38,5 +39,4 @@ things I'll be adding in the coming months / weeks:
 - added undo / redo buttons (stores previous color combinations) ((beta))
 - added dark mode and set it on by default
 - clicking on "add palette" no longer creates a palette with one empty pigment in it
-- uses webpack now for simpler caching
 - color palettes and settings like dark / light mode now persist through reloads via localstorage
