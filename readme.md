@@ -6,7 +6,7 @@ you can install this, by the way. [it's a pwa](https://en.wikipedia.org/wiki/Pro
 
 things I'll be adding in the coming months / weeks:
 
-- [ ] palette exporting (as images, css, scss)
+- [x] palette exporting (as images, css, scss)
 - [x] sharing color combinations through url params (easy enough)
 - [ ] full palette generation and randomization (a feature that coolors has)...coming soon
 - [x] preview extra shades of current colors
@@ -20,6 +20,7 @@ things I'll be adding in the coming months / weeks:
 - [ ] there are issues with re-rendering the palette export canvas at certain viewport breakpoints that I literally have no clue how to fix and I can't tell what's causing them. I might fix those someday
 - [ ] make another color preview box that shows a nearby wcag aaa color combination
 - [ ] refactoring to effectively use webpack
+- [ ] just make it nicer to use on a phone
 
 **patch notes: v0110 03092019**
 - added more compact sliders
