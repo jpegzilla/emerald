@@ -111,11 +111,11 @@ main {
           }
 
           &:nth-child(1) {
-            background-color: $emerald;
+            background-color: $blue;
           }
 
           &:nth-child(2) {
-            background-color: $blue;
+            background-color: $emerald;
           }
         }
         * + * {
