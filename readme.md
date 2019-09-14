@@ -21,6 +21,7 @@ things I'll be adding in the coming months / weeks:
 - [ ] make another color preview box that shows a nearby wcag aaa color combination
 - [ ] refactoring to effectively use webpack
 - [ ] just make it nicer to use on a phone
+- [ ] you should be able to type in the hex value
 
 **patch notes: v0110 03092019**
 - added more compact sliders
