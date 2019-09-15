@@ -23,7 +23,7 @@ selectExportType.addEventListener("input", () => {
 let STORAGE = window.localStorage;
 
 // remember to remove this:
-// STORAGE.clear();
+STORAGE.clear();
 
 let PALETTES =
   STORAGE.getItem("palettes") == undefined
@@ -342,7 +342,7 @@ const setPigmentTextColor = pigmentContainer => {
 };
 
 const loadSavedPalettes = () => {
-  PALETTES.forEach((palette, i) => {
+  PALETTES.forEach(palette => {
     let paletteBar = paletteBarTemplate.cloneNode(true);
     paletteBar.id = "";
     paletteBar.classList.add("palette-bar");
@@ -361,13 +361,13 @@ const loadSavedPalettes = () => {
       name: paletteName,
       palette: paletteBar
     };
-
+    let index = Array.from(paletteContainer.children).indexOf(paletteBar);
     deleteButton.addEventListener("click", () =>
-      paletteControls(paletteBar, "remove", i)
+      paletteControls(paletteBar, "remove", index)
     );
 
     exportButton.addEventListener("click", () =>
-      paletteControls(paletteObject, "export", i)
+      paletteControls(paletteObject, "export", index)
     );
 
     paletteContainer.appendChild(paletteBar);
@@ -432,13 +432,14 @@ const addNewPaletteBar = (bgHex, textHex, alsoAddPigment = true) => {
 
   let exportButton = newPaletteBar.getElementsByClassName("export-palette")[0];
   let deleteButton = newPaletteBar.getElementsByClassName("remove-palette")[0];
+  let index = Array.from(paletteContainer.children).indexOf(newPaletteBar);
 
   deleteButton.addEventListener("click", () =>
-    paletteControls(newPaletteBar, "remove", paletteTotalCount - 1)
+    paletteControls(newPaletteBar, "remove", index)
   );
 
   exportButton.addEventListener("click", () =>
-    paletteControls(paletteObject, "export", paletteTotalCount - 1)
+    paletteControls(paletteObject, "export", index)
   );
 
   if (PALETTES[0].length > 0) paletteTotalCount++;
