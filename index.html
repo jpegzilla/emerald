@@ -291,7 +291,7 @@
 
 <script type="text/javascript">
   window.isUpdateAvailable = new Promise((resolve, reject) => {
-    if ('serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator && 1 == 0) {
       // register service worker file
       navigator.serviceWorker.register('./service-worker.js')
         .then(reg => {

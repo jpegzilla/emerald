@@ -42,3 +42,6 @@ things I'll be adding in the coming months / weeks:
 - added dark mode and set it on by default
 - clicking on "add palette" no longer creates a palette with one empty pigment in it
 - color palettes and settings like dark / light mode now persist through reloads via localstorage
+
+**patch notes: v0112**
+- fixed the palette controller that was giving me grey hairs
