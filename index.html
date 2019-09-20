@@ -100,7 +100,7 @@
 
 
       <div id="close-settings">ok!</div>
-      <a target="_blank" id="report-bug" href="https://github.com/jpegzilla/emerald/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5Bbug%5D">report bug!</a>
+      <a target="_blank" rel="noopener noreferrer" id="report-bug" href="https://github.com/jpegzilla/emerald/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5Bbug%5D">report bug!</a>
     </div>
 
     <div class="message-box">
@@ -210,7 +210,7 @@
       <div class="share-buttons">
         <div class="twitter-button">
           <a target="_blank" href="https://twitter.com/intent/tweet?source=https%3A%2F%2Fjpegzilla.com%2Femerald&text=emerald%20-%20a%20simple%20color%20palette%20tool%20https%3A%2F%2Fjpegzilla.com%2Femerald&via=jpegzilla" class="twitter-share-button"
-            data-size="large">tweet</a>
+            data-size="large" rel="noopener noreferrer">tweet</a>
         </div>
         <div class="github-button">
           <!-- Place this tag where you want the button to render. -->
@@ -291,7 +291,7 @@
 
 <script type="text/javascript">
   window.isUpdateAvailable = new Promise((resolve, reject) => {
-    if ('serviceWorker' in navigator && 1 == 0) {
+    if ('serviceWorker' in navigator) {
       // register service worker file
       navigator.serviceWorker.register('./service-worker.js')
         .then(reg => {

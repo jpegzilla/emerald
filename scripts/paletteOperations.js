@@ -23,7 +23,7 @@ selectExportType.addEventListener("input", () => {
 let STORAGE = window.localStorage;
 
 // remember to remove this:
-STORAGE.clear();
+// STORAGE.clear();
 
 let PALETTES =
   STORAGE.getItem("palettes") == undefined
@@ -204,6 +204,7 @@ const makeExportContent = exportObject => {
 };
 
 const exportPalette = (palette, index, openmodal = true) => {
+  console.log(index);
   if (openmodal) openExportModal();
 
   // get all colors in the palette, then make some sort of export thing
@@ -274,6 +275,7 @@ finalizeExportButton.addEventListener("click", e => {
 
       const a = document.createElement("a");
       a.href = dataURI;
+      a.rel = "noopener noreferrer";
       a.download = "emerald-palette.png";
       a.click();
       break;
@@ -361,6 +363,8 @@ const loadSavedPalettes = () => {
       name: paletteName,
       palette: paletteBar
     };
+    paletteContainer.appendChild(paletteBar);
+
     let index = Array.from(paletteContainer.children).indexOf(paletteBar);
     deleteButton.addEventListener("click", () =>
       paletteControls(paletteBar, "remove", index)
@@ -369,8 +373,6 @@ const loadSavedPalettes = () => {
     exportButton.addEventListener("click", () =>
       paletteControls(paletteObject, "export", index)
     );
-
-    paletteContainer.appendChild(paletteBar);
 
     palette.forEach(pigment => {
       let pigmentContainer = palettePigmentTemplate.cloneNode(true);

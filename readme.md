@@ -22,6 +22,8 @@ things I'll be adding in the coming months / weeks:
 - [ ] refactoring to effectively use webpack
 - [ ] just make it nicer to use on a phone
 - [ ] you should be able to type in the hex value
+- [ ] add more comments
+- [ ] add a way to generate an entire palette from just two colors
 
 **patch notes: v0110 03092019**
 - added more compact sliders
@@ -45,3 +47,13 @@ things I'll be adding in the coming months / weeks:
 
 **patch notes: v0112**
 - fixed the palette controller that was giving me grey hairs
+
+**patch notes: v0113**
+- emerald's interface now looks nicer on small little laptop screens (think <= 1380px)
+- fixed weird bug where if you exported a palette it would sometimes generate css variables for the wrong colors
+- fixed bug where the fancy color name would appear in the colorfield while exporting a palette
+- fixed bug where the "press space to randomize" text would sometimes be the wrong color
+- fixed issue in firefox where you can't export color palettes as images because firefox was blocking the image download prompt
+
+**patch notes: v0114 09202019**
+- fixed an issue with palette exporting
