@@ -23,7 +23,7 @@ selectExportType.addEventListener("input", () => {
 let STORAGE = window.localStorage;
 
 // remember to remove this:
-STORAGE.clear();
+// STORAGE.clear();
 
 let PALETTES =
   STORAGE.getItem("palettes") == undefined
