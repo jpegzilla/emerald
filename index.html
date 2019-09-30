@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>emerald.</title>
 
   <!--  ios meta tags and icons -->
@@ -28,7 +29,7 @@
   <meta name="twitter:description" content="emerald is a color palette creation and testing tool with several useful features.">
   <meta name="twitter:image" content="./styles/img/emerald-preview.png">
   <meta name="twitter:card" content="summary-large-image">
-  <meta name="application-name" content="emerald" />
+  <meta name="application-name" content="emerald">
   <link rel="author" href="humans.txt">
   <link rel="canonical" href="https://jpegzilla.com/emerald">
 
@@ -50,12 +51,11 @@
   <link rel="icon" type="image/png" sizes="96x96" href="./styles/img/favicon-96x96.png">
   <link rel="icon" type="image/png" sizes="16x16" href="./styles/img/favicon-16x16.png">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="manifest" href="./manifest.json">
   <meta name="msapplication-TileColor" content="#50c878">
   <meta name="msapplication-TileImage" content="./styles/img/ms-icon-144x144.png">
   <meta name="theme-color" content="#50c878">
-  <meta name="msapplication-config" content="./browserconfig.xml" />
+  <meta name="msapplication-config" content="./browserconfig.xml">
 </head>
 
 <body>
@@ -99,8 +99,9 @@
       </div>
 
 
-      <div id="close-settings">ok!</div>
-      <a target="_blank" rel="noopener noreferrer" id="report-bug" href="https://github.com/jpegzilla/emerald/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5Bbug%5D">report bug!</a>
+      <div id="close-settings" class="setting-button">ok!</div>
+      <div id="clear-data" class="setting-button">clear local data (removes all palettes and settings)</div>
+      <a target="_blank" rel="noopener noreferrer" id="report-bug" class="setting-button" href="https://github.com/jpegzilla/emerald/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5Bbug%5D">report bug!</a>
     </div>
 
     <div class="message-box">
@@ -159,7 +160,7 @@
         <div class="color-name">
           <div class="color-picker"><span id="showBackgroundColor" class="active">background</span><span id="showTextColor" class="inactive">text</span><span id="showColorPreviews" class="inactive visible">color previews: off</span><span id="showFancyColorNames"
               class="inactive">css color names</span></div>
-          <div id="hex-code"></div>
+          <div><input spellcheck="false" maxlength="7" autocorrect="off" autocapitalize="off" autocomplete="off" pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" id="hex-code" type="text"></div>
           <div id="rgb-code"></div>
           <div id="hsl-code"></div>
           <div id="css-name">&nbsp;</div>
@@ -200,58 +201,69 @@
     </div>
 
     <div id="color-controls">
-      <div class="swap-color-container">
-        <div class="control-button" id="swapColors">swap colors &lrarr;</div>
-        <div class="control-button disabled" id="undo">undo &olarr;</div>
-        <div id="randomize-mobile">randomize &#10542;</div>
-        <div class="control-button disabled" id="redo">redo &orarr;</div>
-      </div>
-
-      <div class="share-buttons">
-        <div class="twitter-button">
-          <a target="_blank" href="https://twitter.com/intent/tweet?source=https%3A%2F%2Fjpegzilla.com%2Femerald&text=emerald%20-%20a%20simple%20color%20palette%20tool%20https%3A%2F%2Fjpegzilla.com%2Femerald&via=jpegzilla" class="twitter-share-button"
-            data-size="large" rel="noopener noreferrer">tweet</a>
+      <div class="color-buttons">
+        <div class="swap-color-container">
+          <div class="control-button" id="swapColors">swap colors &lrarr;</div>
         </div>
-        <div class="github-button">
-          <!-- Place this tag where you want the button to render. -->
-          <a target="_blank" class="github-button" href="https://github.com/jpegzilla/emerald" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star jpegzilla/emerald on GitHub">Star</a>
+        <div class="randomize-controls">
+          <div class="control-button disabled" id="undo">undo &olarr;</div>
+          <div id="randomize-mobile">randomize &#10542;</div>
+          <div class="control-button disabled" id="redo">redo &orarr;</div>
+        </div>
+        <div class="generate-controls">
+          <div id="generate-palette" class="control-button">generate palette</div>
         </div>
       </div>
 
-      <!-- pick background color -->
+      <div class="color-sliders">
+        <div class="share-buttons">
+          <div class="twitter-button">
+            <a target="_blank" href="https://twitter.com/intent/tweet?source=https%3A%2F%2Fjpegzilla.com%2Femerald&text=emerald%20-%20a%20simple%20color%20palette%20tool%20https%3A%2F%2Fjpegzilla.com%2Femerald&via=jpegzilla" class="twitter-share-button"
+              data-size="large" rel="noopener noreferrer">tweet</a>
+          </div>
+          <div class="github-button">
+            <!-- Place this tag where you want the button to render. -->
+            <a target="_blank" class="github-button" href="https://github.com/jpegzilla/emerald" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star jpegzilla/emerald on GitHub">Star</a>
+          </div>
+        </div>
 
-      <div class="background-picker">
-        <h1><span class="lockColor" id="lockBackground">&#x1F513;</span> background color.</h1>
-        <div class="picker-group">
-          <p>red <span id="redBGValue"></span></p>
-          <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="rInput">
-        </div>
-        <div class="picker-group">
-          <p>green <span id="greenBGValue"></span></p>
-          <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="gInput">
-        </div>
-        <div class="picker-group">
-          <p>blue <span id="blueBGValue"></span></p>
-          <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="bInput">
-        </div>
-      </div>
+        <!-- pick background color -->
 
-      <!-- pick text color -->
-
-      <div class="text-picker">
-
-        <h1><span class="lockColor" id="lockText">&#x1F513;</span> text color.</h1>
-        <div class="picker-group">
-          <p>red <span id="redtxtValue"></span></p>
-          <input data-color="rgb(80, 200, 120)" class="colortxtInput" type="range" min="0" max="255" step="1" id="trInput">
+        <div class="background-picker">
+          <h1><span class="lockColor" id="lockBackground">&#x1F513;</span> background color.</h1>
+          <div class="picker-group">
+            <p>red <span id="redBGValue"></span></p>
+            <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="rInput">
+          </div>
+          <div class="picker-group">
+            <p>green <span id="greenBGValue"></span></p>
+            <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="gInput">
+          </div>
+          <div class="picker-group">
+            <p>blue <span id="blueBGValue"></span></p>
+            <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="bInput">
+          </div>
         </div>
-        <div class="picker-group">
-          <p>green <span id="greentxtValue"></span></p>
-          <input data-color="rgb(80, 200, 120)" class="colortxtInput" type="range" min="0" max="255" step="1" id="tgInput">
-        </div>
-        <div class="picker-group">
-          <p>blue <span id="bluetxtValue"></span></p>
-          <input data-color="rgb(80, 200, 120)" class="colortxtInput" type="range" min="0" max="255" step="1" id="tbInput">
+
+
+
+        <!-- pick text color -->
+
+        <div class="text-picker">
+
+          <h1><span class="lockColor" id="lockText">&#x1F513;</span> text color.</h1>
+          <div class="picker-group">
+            <p>red <span id="redtxtValue"></span></p>
+            <input data-color="rgb(80, 200, 120)" class="colortxtInput" type="range" min="0" max="255" step="1" id="trInput">
+          </div>
+          <div class="picker-group">
+            <p>green <span id="greentxtValue"></span></p>
+            <input data-color="rgb(80, 200, 120)" class="colortxtInput" type="range" min="0" max="255" step="1" id="tgInput">
+          </div>
+          <div class="picker-group">
+            <p>blue <span id="bluetxtValue"></span></p>
+            <input data-color="rgb(80, 200, 120)" class="colortxtInput" type="range" min="0" max="255" step="1" id="tbInput">
+          </div>
         </div>
       </div>
     </div>

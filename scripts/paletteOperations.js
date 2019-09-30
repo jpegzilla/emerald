@@ -23,7 +23,7 @@ selectExportType.addEventListener("input", () => {
 let STORAGE = window.localStorage;
 
 // remember to remove this:
-// STORAGE.clear();
+STORAGE.clear();
 
 let PALETTES =
   STORAGE.getItem("palettes") == undefined
@@ -204,7 +204,6 @@ const makeExportContent = exportObject => {
 };
 
 const exportPalette = (palette, index, openmodal = true) => {
-  console.log(index);
   if (openmodal) openExportModal();
 
   // get all colors in the palette, then make some sort of export thing
@@ -213,7 +212,6 @@ const exportPalette = (palette, index, openmodal = true) => {
   let wereColorsFancy = false;
   if (FANCY_COLOR_NAMES == false) {
     FANCY_COLOR_NAMES = true;
-    wereColorsFancy = true;
     setColorNames();
   }
 
@@ -291,9 +289,9 @@ const paletteControls = (palette, operation, index) => {
       palette.classList.add("hide");
       setTimeout(() => {
         paletteHumanIndex--;
-        paletteTotalCount--;
         currentPalette--;
         PALETTES.splice(index, 1);
+        paletteTotalCount = PALETTES.length;
         savePaletteState();
         return palette.remove();
       }, 500);
@@ -444,7 +442,7 @@ const addNewPaletteBar = (bgHex, textHex, alsoAddPigment = true) => {
     paletteControls(paletteObject, "export", index)
   );
 
-  if (PALETTES[0].length > 0) paletteTotalCount++;
+  paletteTotalCount = PALETTES.length;
 };
 
 const addPigment = (paletteBar, bgHex, textHex, saveColor = false) => {
@@ -463,8 +461,12 @@ const addPigment = (paletteBar, bgHex, textHex, saveColor = false) => {
       bg: { hex: bgHex, rgb: bgColor },
       text: { hex: textHex, rgb: textColor }
     };
-    currentPalette++;
-    PALETTES.push([]);
+
+    if (PALETTES[currentPalette].length != 0) {
+      currentPalette++;
+      PALETTES.push([]);
+    }
+
     PALETTES[currentPalette].push(localColorObject);
     savePaletteState();
   }
@@ -499,19 +501,10 @@ const addColorToPalette = (bgColor, textColor) => {
 
   if (PALETTES[currentPalette].length < 5) {
     PALETTES[currentPalette].push(localColorObject);
-  } else {
-    currentPalette++;
-    PALETTES.push([]);
-    PALETTES[currentPalette].push(localColorObject);
-  }
+    addPigment(currentPaletteBar, bgHex, textHex);
+  } else addNewPaletteBar(bgHex, textHex);
 
   savePaletteState();
-
-  if (currentPaletteBar.children.length < 6) {
-    addPigment(currentPaletteBar, bgHex, textHex);
-  } else {
-    addNewPaletteBar(bgHex, textHex);
-  }
 };
 
 addToPalette.addEventListener("click", () => {
@@ -535,3 +528,88 @@ addToPalette.addEventListener("click", () => {
 addNewPalette.addEventListener("click", () =>
   addNewPaletteBar(colorObject.bg.hex, colorObject.text.hex)
 );
+
+// generate an entire palette from two colors
+const makeFullPalette = () => {
+  // create a fresh palette bar with the two current colors
+  addNewPaletteBar(colorObject.bg.hex, colorObject.text.hex);
+
+  // the place where the new palette is going to go
+  let index = PALETTES.length - 1;
+  let newPalette = PALETTES[index];
+
+  // rgb values of currently displayed colors
+  let obgRGB = hexToRGBA(colorObject.bg.hex);
+  let obtxtRGB = hexToRGBA(colorObject.text.hex);
+
+  // arrays for putting the generated colors into
+  let bgColors = [];
+  let txtColors = [];
+
+  let cyan = { r: 0, g: 255, b: 255 };
+
+  // function to change color's hue
+  const shiftHue = (rgb, deg) => {
+    let hsl = rgbToNHSL(rgb.r, rgb.g, rgb.b);
+    console.log(hsl);
+    hsl.h += deg;
+    if (hsl.h > 360) hsl.h -= 360;
+    else if (hsl.h < 0) hsl.h += 360;
+
+    return hslToRGB(hsl.h, hsl.s, hsl.l);
+  };
+
+  console.log(shiftHue(cyan, 20));
+
+  // if color scheme generation setting is analogous, use shiftHue
+  // to select new colors. if it's monochrome, then just use changeShade
+  // with the hex values. use this logic to make sure colors don't get too dark:
+  // for (let i = 1; i < 6; i++) {
+  //   let newShadeBg, newShadeText;
+  //
+  //   newShadeBg = changeShade(bgAlts[i - 1], -15);
+  //   newShadeText = changeShade(textAlts[i - 1], -15);
+  //
+  //   if (newShadeBg == "#000000") {
+  //     newShadeBg = changeShade(bgAlts[0], 15);
+  //     bgAlts.unshift(newShadeBg);
+  //   } else bgAlts.push(newShadeBg);
+  //
+  //   if (newShadeText == "#000000") {
+  //     newShadeText = changeShade(textAlts[0], 15);
+  //     textAlts.unshift(newShadeText);
+  //   } else textAlts.push(newShadeText);
+  // }
+
+  // for this function:
+  // I need to take the relevant color (background or text)
+  // and using that color's rgb values, I'll generate four
+  // other colors that look nice with it, OR generate four
+  // colors that are just similar to it (meaning nearly
+  // adjacent rgb values).
+  const generateNewColor = color => {
+    // generate a color adjacent to the color argument
+    // or complementary??
+    // in fact, make a palette generation setting that
+    // allows the user to choose whether to generate
+    // gradient palettes or complementary color schemes.
+
+    return;
+  };
+
+  // then, I'll make a loop to create the new palettes similar to
+  // how the user naturally creates them, just by calling addToPalette()
+  // over and over for each of the five pairs.
+  for (let i = 0; i < 4; i++) {
+    let cbg = bgColors[i];
+    let ctxt = txtColors[i];
+    // take the color at bgColors[i] and the one at txtColors[i]
+    // and add them as pigments to the palette
+  }
+
+  // savePaletteState();
+};
+
+document
+  .getElementById("generate-palette")
+  .addEventListener("click", () => makeFullPalette());

@@ -239,16 +239,16 @@ let mediaSmall = window.matchMedia("(min-width: 1300px)");
 mediaTiny.addListener(e => {
   if (e.matches) {
     expCtx.clearRect(0, 0, exportCanvas.width, exportCanvas.height);
-    drawSwatchesMobile(currentExportObject);
+    if (currentExportObject) drawSwatchesMobile(currentExportObject);
   } else {
     expCtx.clearRect(0, 0, exportCanvas.width, exportCanvas.height);
-    drawSwatches(currentExportObject);
+    if (currentExportObject) drawSwatches(currentExportObject);
   }
 });
 
 mediaSmall.addListener(e => {
   if (e.matches) {
     expCtx.clearRect(0, 0, exportCanvas.width, exportCanvas.height);
-    drawSwatches(currentExportObject);
+    if (currentExportObject) drawSwatches(currentExportObject);
   }
 });

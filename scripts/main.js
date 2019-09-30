@@ -68,6 +68,56 @@ window.onload = () => {
     blue: document.getElementById("tbInput")
   };
 
+  const hexCodeInput = document.getElementById("hex-code");
+
+  const setCorrectedColor = () => {
+    try {
+      let color = hexToRGBA(hexCodeInput.value);
+      let rgba = `rgb(${color.r}, ${color.g}, ${color.b})`;
+
+      return currentColorSetting == "background"
+        ? updateBG(rgba)
+        : updateTxt(rgba);
+    } catch (e) {
+      return;
+    }
+  };
+
+  // allow manual hex code entry
+  hexCodeInput.addEventListener("change", () => setCorrectedColor());
+
+  hexCodeInput.addEventListener("input", () => {
+    const allowChars = /[^A-Fa-f0-9|^#]/gi;
+    let hexCode = hexCodeInput.value;
+    let invalidIndex = hexCode.search(allowChars);
+    hexCodeInput.value = hexCodeInput.value.replace(/\s/, "");
+
+    if (invalidIndex != -1) {
+      hexCodeInput.value =
+        hexCodeInput.value.substring(0, invalidIndex) +
+        "0" +
+        hexCodeInput.value.substring(invalidIndex + 1);
+
+      setCorrectedColor();
+    }
+
+    if (hexCodeInput.value.indexOf("#") != 0) {
+      hexCodeInput.value = "#";
+    }
+
+    if (
+      hexCodeInput.value.indexOf("#", 1) != -1 &&
+      hexCodeInput.value.indexOf("#", 1) != 0
+    ) {
+      hexCodeInput.value =
+        "#" + hexCodeInput.value.substring(1).replace(/#/gim, "0");
+
+      setCorrectedColor();
+    }
+
+    if (hexCodeInput.value.length == 7) setCorrectedColor();
+  });
+
   bginputs.red.value = defbgRGB.r;
   bginputs.green.value = defbgRGB.g;
   bginputs.blue.value = defbgRGB.b;

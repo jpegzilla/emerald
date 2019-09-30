@@ -1,5 +1,6 @@
 const modalContainer = document.getElementById("modal-container");
 const closeSettings = document.getElementById("close-settings");
+const clearData = document.getElementById("clear-data");
 const closeMessage = document.getElementById("close-message");
 const closeExport = document.getElementById("close-export");
 
@@ -78,6 +79,16 @@ modalContainer.addEventListener("click", e => {
 closeMessage.addEventListener("click", () =>
   messageBox.classList.remove("active")
 );
+
+clearData.addEventListener("click", () => {
+  const original = clearData.innerText;
+  clearData.innerText = "data cleared! refreshing.";
+  STORAGE.clear();
+  setTimeout(() => {
+    clearData.innerText = original;
+    setTimeout(() => window.location.reload(true), 500);
+  }, 2000);
+});
 
 openSettings.addEventListener("click", () => openSettingsModal());
 

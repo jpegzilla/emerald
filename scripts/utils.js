@@ -160,18 +160,19 @@ const hslToRGB = (h, s, l) => {
   };
 };
 
+// when did I use this? and what is dHSL??
 const rgbToDHSL = (r, g, b) => {
   (r /= 255), (g /= 255), (b /= 255);
-  var max = Math.max(r, g, b),
+  let max = Math.max(r, g, b),
     min = Math.min(r, g, b);
-  var h,
+  let h,
     s,
     l = (max + min) / 2;
 
   if (max == min) {
     h = s = 0; // achromatic
   } else {
-    var d = max - min;
+    let d = max - min;
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
     switch (max) {
       case r:
@@ -201,11 +202,11 @@ const rgbToHSL = (r, g, b) => {
   let h = 0;
   if (max != min) {
     if (l < 0.5) s = (max - min) / (max + min);
-    else s = (max - min) / (2.0 - max - min);
+    else s = (max - min) / (2 - max - min);
 
     if (r == max) h = (g - b) / (max - min);
-    else if (g == max) h = 2.0 + (b - r) / (max - min);
-    else h = 4.0 + (r - g) / (max - min);
+    else if (g == max) h = 2 + (b - r) / (max - min);
+    else h = 4 + (r - g) / (max - min);
   }
 
   l = l * 100;
@@ -219,6 +220,39 @@ const rgbToHSL = (r, g, b) => {
     h: h.toFixed(2),
     s: s.toFixed(2) + "%",
     l: l.toFixed(2) + "%"
+  };
+};
+
+// rgb to NumberHSL
+const rgbToNHSL = (r, g, b) => {
+  (r /= 255), (g /= 255), (b /= 255);
+
+  let max = Math.max(r, g, b);
+  let min = Math.min(r, g, b);
+
+  let l = (max + min) / 2;
+  let s = 0;
+  let h = 0;
+  if (max != min) {
+    if (l < 0.5) s = (max - min) / (max + min);
+    else s = (max - min) / (2 - max - min);
+
+    if (r == max) h = (g - b) / (max - min);
+    else if (g == max) h = 2 + (b - r) / (max - min);
+    else h = 4 + (r - g) / (max - min);
+  }
+
+  l = l * 100;
+  s = s * 100;
+  h = h * 60;
+  if (h < 0) {
+    h += 360;
+  }
+
+  return {
+    h: h,
+    s: s,
+    l: l
   };
 };
 
@@ -483,16 +517,16 @@ const setComputedColors = (pushToHistory = false) => {
     b: f[3]
   };
 
-  let contrast = Math.round(
+  let brightness = Math.round(
     (parseInt(background.r) * 299 +
       parseInt(background.g) * 587 +
       parseInt(background.b) * 114) /
       1000
   );
 
-  if (contrast > 125 && header.classList.contains("black") == false) {
+  if (brightness > 125 && header.classList.contains("black") == false) {
     header.classList.add("black");
-  } else if (contrast < 125 && header.classList.contains("black") == true) {
+  } else if (brightness < 125 && header.classList.contains("black") == true) {
     header.classList.remove("black");
   }
 
@@ -527,7 +561,7 @@ const setComputedColors = (pushToHistory = false) => {
   let txtColorName = hexToColorName(cssColorNames, deftxtHex);
 
   if (currentColorSetting == "background") {
-    hexBGVal.innerText = defbgHex;
+    hexBGVal.value = defbgHex;
     rgbBGVal.innerText = `rgb(${defbgRGB.r}, ${defbgRGB.g}, ${defbgRGB.b})`;
     hslBGVal.innerText = `hsl(${hslVals.h}, ${hslVals.s}, ${hslVals.l})`;
 
@@ -535,7 +569,7 @@ const setComputedColors = (pushToHistory = false) => {
       ? `color name (actual): ${bgColorName.toLowerCase()}`
       : `color name (closest): ${findNearestColor(defbgHex).toLowerCase()}`;
   } else if ((currentColorSetting = "text")) {
-    hexBGVal.innerText = deftxtHex;
+    hexBGVal.value = deftxtHex;
     rgbBGVal.innerText = `rgb(${deftxtRGB.r}, ${deftxtRGB.g}, ${deftxtRGB.b})`;
     hslBGVal.innerText = `hsl(${hsltxtVals.h}, ${hsltxtVals.s}, ${
       hsltxtVals.l
@@ -623,17 +657,20 @@ const setComputedColors = (pushToHistory = false) => {
       b: f[3]
     };
 
-    let contrast = Math.round(
+    let brightness = Math.round(
       (parseInt(background.r) * 299 +
         parseInt(background.g) * 587 +
         parseInt(background.b) * 114) /
         1000
     );
 
-    if (contrast > 125 && box.classList.contains("blackText") == false) {
+    if (brightness > 125 && box.classList.contains("blackText") == false) {
       box.classList.add("blackText");
       header.classList.add("black");
-    } else if (contrast < 125 && box.classList.contains("blackText") == true) {
+    } else if (
+      brightness < 125 &&
+      box.classList.contains("blackText") == true
+    ) {
       box.classList.remove("blackText");
       header.classList.remove("black");
     }

@@ -64,13 +64,13 @@
       }
     }
 
-    #close-settings {
-      @include button;
-    }
-
-    #report-bug {
+    .setting-button {
       @include button;
       margin-top: 0.5rem;
+
+      &:nth-last-child(3) {
+        margin-top: 4rem;
+      }
     }
   }
 

@@ -11,19 +11,20 @@ things I'll be adding in the coming months / weeks:
 - [ ] full palette generation and randomization (a feature that coolors has)...coming soon
 - [x] preview extra shades of current colors
 - [x] more compact view for sliders
-- [ ] drag / drop to move pigments around in a palette (hard :(...)
+- [ ] drag / drop to move pigments around in a palette (rly hard :(...)
 - [x] refactor my *filthy, nasty* scss
 - [x] settings (exclude certain color ranges, change randomization parameters...?)
 - [x] show approximate css color name even if the css color isn't *exactly* the same (this is what I'm having trouble with, but sort of works)
-- [ ] refactor my *gross* javascript
+- [ ] refactor my *gross* javascript (looking at you, palette handler script)
 - [ ] add accessibility features such as simpler keyboard controls
 - [ ] there are issues with re-rendering the palette export canvas at certain viewport breakpoints that I literally have no clue how to fix and I can't tell what's causing them. I might fix those someday
 - [ ] make another color preview box that shows a nearby wcag aaa color combination
 - [ ] refactoring to effectively use webpack
 - [ ] just make it nicer to use on a phone
-- [ ] you should be able to type in the hex value
+- [x] you should be able to type in the hex value
 - [ ] add more comments
-- [ ] add a way to generate an entire palette from just two colors
+- [ ] add ability to generate entire palette from two colors
+- [ ] add palette generation settings: contrast ratio maximum, exclusion range
 
 **patch notes: v0110 03092019**
 - added more compact sliders
@@ -57,3 +58,10 @@ things I'll be adding in the coming months / weeks:
 
 **patch notes: v0114 09202019**
 - fixed an issue with palette exporting
+
+**patch notes: v0115**
+- added ability to enter hex colors manually
+- fixed (final? please?) bug with palette creation
+- layout improvements
+- fixed bug with color names getting messed up after trying to export a palette
+- added palette generation button (that's a surprise tool that can help us later)

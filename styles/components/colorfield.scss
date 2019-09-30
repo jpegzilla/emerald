@@ -18,8 +18,11 @@ main {
 
     .color-info {
       width: auto;
-      flex-grow: 1;
       height: 100%;
+
+      div {
+        width: auto;
+      }
     }
 
     .color-previews {
@@ -131,6 +134,15 @@ main {
       #showFancyColorNames {
         display: none;
       }
+    }
+
+    input {
+      background: transparent;
+      width: 7ch;
+      border: none;
+      color: currentColor;
+      font-family: $share-tech;
+      outline: none;
     }
 
     .color-name {
