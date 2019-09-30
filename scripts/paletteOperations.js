@@ -610,6 +610,6 @@ const makeFullPalette = () => {
   // savePaletteState();
 };
 
-document
-  .getElementById("generate-palette")
-  .addEventListener("click", () => makeFullPalette());
+// document
+//   .getElementById("generate-palette")
+//   .addEventListener("click", () => makeFullPalette());
