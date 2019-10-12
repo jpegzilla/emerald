@@ -160,7 +160,7 @@ const hslToRGB = (h, s, l) => {
   };
 };
 
-// when did I use this? and what is dHSL??
+// returns h, s, and l in the set [0, 1]
 const rgbToDHSL = (r, g, b) => {
   (r /= 255), (g /= 255), (b /= 255);
   let max = Math.max(r, g, b),
@@ -169,9 +169,8 @@ const rgbToDHSL = (r, g, b) => {
     s,
     l = (max + min) / 2;
 
-  if (max == min) {
-    h = s = 0; // achromatic
-  } else {
+  if (max == min) h = s = 0;
+  else {
     let d = max - min;
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
     switch (max) {
@@ -212,9 +211,7 @@ const rgbToHSL = (r, g, b) => {
   l = l * 100;
   s = s * 100;
   h = h * 60;
-  if (h < 0) {
-    h += 360;
-  }
+  if (h < 0) h += 360;
 
   return {
     h: h.toFixed(2),
@@ -245,9 +242,9 @@ const rgbToNHSL = (r, g, b) => {
   l = l * 100;
   s = s * 100;
   h = h * 60;
-  if (h < 0) {
-    h += 360;
-  }
+
+  // if hue is less than zero, wrap it around to be back in range
+  if (h < 0) h += 360;
 
   return {
     h: h,
@@ -256,6 +253,28 @@ const rgbToNHSL = (r, g, b) => {
   };
 };
 
+// function to change color's hue
+const shiftHue = (rgb, deg) => {
+  let hsl = rgbToNHSL(rgb.r, rgb.g, rgb.b);
+
+  if (deg > 100 || deg < 0)
+    throw new RangeError(
+      "amount of hue shifting in shiftHue must be within the range [0, 100]."
+    );
+
+  hsl.h += deg;
+  if (hsl.h < 0) hsl.h += 360;
+  if (hsl.h > 360) hsl.h -= 360;
+  hsl.h /= 360;
+  hsl.s /= 100;
+  hsl.l /= 100;
+
+  return hslToRGB(hsl.h, hsl.s, hsl.l);
+};
+
+// luminance calculation based on this:
+// https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+// which is also where these constants are from
 const calculateLuminance = (r, g, b) => {
   const srgb = [r, g, b].map(val => val / 255);
   const [R, G, B] = srgb.map(
@@ -291,6 +310,7 @@ const getContrastRatio = (text, bg) => {
   return { number: contrastNum, string: contrastString };
 };
 
+// change hex color shade by amount
 const changeShade = (color, amount) => {
   let usePound = false;
 
@@ -368,6 +388,8 @@ let colorHexArray = Array.from(Object.values(cssColorNames));
 let fancyColorHexArray = Array.from(Object.values(objectFlip(colorLib)));
 let lastKnownClosestColor;
 
+// findNearestColor finds the name in the color lib that is closest to the color
+// supplies as an argument
 const findNearestColor = hex => {
   if (typeof hex !== "string")
     throw new Error(
@@ -474,6 +496,7 @@ const findNearestAAAColor = (background, text, nearestTo = "text") => {
     ? { background: nearestAAAColor, text: text }
     : { background: background, text: nearestAAAColor };
 };
+
 // this is a method for allowing the user to copy a color swatch's contents by clicking on it
 const setColorSwatchListeners = () => {
   const copyColor = (element, e) => {

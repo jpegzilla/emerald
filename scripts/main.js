@@ -36,6 +36,10 @@ const txtSliders = Array.from(document.getElementsByClassName("colortxtInput"));
 const randomParamsStart = document.getElementById("randomParamsStart");
 const randomParamsEnd = document.getElementById("randomParamsEnd");
 const themeSelect = document.getElementById("themeSelect");
+const colorPaletteGenerationSwitch = document.getElementById(
+  "paletteGenerationSettings"
+);
+let paletteGenParams = "analogous";
 
 const BODY = document.body;
 
@@ -50,7 +54,7 @@ window.onload = () => {
 
   setTimeout(() => {
     preloader.classList.add("hidden");
-    document.body.classList.add("scroll");
+    BODY.classList.add("scroll");
     enableScroll();
   }, 1500);
 
@@ -190,6 +194,13 @@ window.onload = () => {
 
   randomParamsEnd.addEventListener("input", fixParams);
 
+  const setPaletteGenParams = () => {
+    const setting = colorPaletteGenerationSwitch.value;
+    paletteGenParams = setting;
+  };
+
+  colorPaletteGenerationSwitch.addEventListener("input", setPaletteGenParams);
+
   if (
     STORAGE.getItem("darkMode") != undefined &&
     STORAGE.getItem("darkMode") == "false"
@@ -309,14 +320,14 @@ window.onload = () => {
     }
   };
 
-  document.body.onkeydown = e => {
-    if (e.keyCode == 32 && document.activeElement == document.body) {
+  BODY.onkeydown = e => {
+    if (e.keyCode == 32 && document.activeElement == BODY) {
       e.preventDefault();
     }
   };
 
-  document.body.onkeyup = e => {
-    if (e.keyCode == 32 && document.activeElement == document.body) {
+  BODY.onkeyup = e => {
+    if (e.keyCode == 32 && document.activeElement == BODY) {
       e.preventDefault();
 
       if (document.getElementById("randomizeReminder")) {
@@ -385,7 +396,7 @@ window.onload = () => {
     const getScrollTop = () => {
       if (typeof pageYOffset != "undefined") return pageYOffset;
       else {
-        var B = document.body;
+        var B = BODY;
         var D = document.documentElement;
         D = D.clientHeight ? D : B;
         return D.scrollTop;

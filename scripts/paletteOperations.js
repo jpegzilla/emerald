@@ -23,7 +23,7 @@ selectExportType.addEventListener("input", () => {
 let STORAGE = window.localStorage;
 
 // remember to remove this:
-// STORAGE.clear();
+STORAGE.clear();
 
 let PALETTES =
   STORAGE.getItem("palettes") == undefined
@@ -531,6 +531,7 @@ addNewPalette.addEventListener("click", () =>
 
 // generate an entire palette from two colors
 const makeFullPalette = () => {
+  console.log("[PARAMS]", paletteGenParams);
   // create a fresh palette bar with the two current colors
   addNewPaletteBar(colorObject.bg.hex, colorObject.text.hex);
 
@@ -546,20 +547,25 @@ const makeFullPalette = () => {
   let bgColors = [];
   let txtColors = [];
 
-  let cyan = { r: 0, g: 255, b: 255 };
+  bgColors.push(obgRGB);
+  txtColors.push(obtxtRGB);
 
-  // function to change color's hue
-  const shiftHue = (rgb, deg) => {
-    let hsl = rgbToNHSL(rgb.r, rgb.g, rgb.b);
-    console.log(hsl);
-    hsl.h += deg;
-    if (hsl.h > 360) hsl.h -= 360;
-    else if (hsl.h < 0) hsl.h += 360;
+  console.log(bgColors, txtColors);
 
-    return hslToRGB(hsl.h, hsl.s, hsl.l);
-  };
+  let cyan = { r: 251, g: 255, b: 255 };
 
-  console.log(shiftHue(cyan, 20));
+  console.log("[SHIFTHUE RGB OUT]", shiftHue(cyan, 20));
+  return;
+
+  // if color scheme generation setting is gradient
+  // use the background color as one endpoint and the text color as the other.
+  // generate the palette by interpolating between these two colors with eight steps.
+  // in pigments, background color is on the left, text color is on the right.
+  // keep that in mind when creating a gradient palette.
+
+  // color scheme generation setting is monochrome
+  // then each generated pigment should have a background / text pigment
+  // derived from the original pigments, but all using the same hue.
 
   // if color scheme generation setting is analogous, use shiftHue
   // to select new colors. if it's monochrome, then just use changeShade
@@ -610,6 +616,6 @@ const makeFullPalette = () => {
   // savePaletteState();
 };
 
-// document
-//   .getElementById("generate-palette")
-//   .addEventListener("click", () => makeFullPalette());
+document
+  .getElementById("generate-palette")
+  .addEventListener("click", () => makeFullPalette());

@@ -98,6 +98,15 @@
         </select>
       </div>
 
+      <div class="setting-bar generation-params">
+        <span>palette generation type:</span>
+        <select id="paletteGenerationSettings">
+          <option>analogous</option>
+          <option>gradient</option>
+          <option>monochromatic</option>
+        </select>
+      </div>
+
 
       <div id="close-settings" class="setting-button">ok!</div>
       <div id="clear-data" class="setting-button">clear local data (removes all palettes and settings)</div>
@@ -210,9 +219,9 @@
           <div id="randomize-mobile">randomize &#10542;</div>
           <div class="control-button disabled" id="redo">redo &orarr;</div>
         </div>
-        <!-- <div class="generate-controls">
+        <div class="generate-controls">
           <div id="generate-palette" class="control-button">generate palette</div>
-        </div> -->
+        </div>
       </div>
 
       <div class="color-sliders">
@@ -303,7 +312,7 @@
 
 <script type="text/javascript">
   window.isUpdateAvailable = new Promise((resolve, reject) => {
-    if ('serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator && 0 == 1) {
       // register service worker file
       navigator.serviceWorker.register('./service-worker.js')
         .then(reg => {
