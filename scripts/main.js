@@ -39,7 +39,26 @@ const themeSelect = document.getElementById("themeSelect");
 const colorPaletteGenerationSwitch = document.getElementById(
   "paletteGenerationSettings"
 );
-let paletteGenParams = "analogous";
+const colorGenerationCount = document.getElementById("color-generation-count");
+
+let colorPaletteGenerationSlider = document.getElementById(
+  "generation-count-slider"
+);
+const colorFactorCount = document.getElementById(
+  "color-generation-factor-count"
+);
+let colorSeperationFactorSlider = document.getElementById(
+  "color-generation-factor"
+);
+let colorPaletteCount = 5;
+let colorSeperationFactor = 10;
+
+// initialize palette generation parameters
+let paletteGenParams = {
+  setting: paletteGenerationSettings.children[0].innerText,
+  count: colorPaletteCount,
+  factor: colorSeperationFactor
+};
 
 const BODY = document.body;
 
@@ -52,11 +71,9 @@ window.onload = () => {
 
   preloader = document.getElementById("preloader");
 
-  setTimeout(() => {
-    preloader.classList.add("hidden");
-    BODY.classList.add("scroll");
-    enableScroll();
-  }, 1500);
+  preloader.classList.add("hidden");
+  BODY.classList.add("scroll");
+  enableScroll();
 
   // set default color slider values:
 
@@ -196,10 +213,16 @@ window.onload = () => {
 
   const setPaletteGenParams = () => {
     const setting = colorPaletteGenerationSwitch.value;
-    paletteGenParams = setting;
+    const count = parseInt(colorPaletteGenerationSlider.value);
+    const factor = parseInt(colorSeperationFactorSlider.value);
+    colorGenerationCount.textContent = count;
+    colorFactorCount.textContent = factor;
+    paletteGenParams = { setting: setting, count: count, factor: factor };
   };
 
   colorPaletteGenerationSwitch.addEventListener("input", setPaletteGenParams);
+  colorPaletteGenerationSlider.addEventListener("input", setPaletteGenParams);
+  colorSeperationFactorSlider.addEventListener("input", setPaletteGenParams);
 
   if (
     STORAGE.getItem("darkMode") != undefined &&

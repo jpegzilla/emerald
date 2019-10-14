@@ -31,11 +31,15 @@
     @include modalBox;
 
     .setting-bar + .setting-bar {
-      margin-top: 0.25rem;
+      margin-top: 1.5rem;
     }
 
     select {
       @include select;
+    }
+
+    label + input {
+      margin-top: 1rem;
     }
 
     span + span,

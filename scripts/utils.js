@@ -272,6 +272,25 @@ const shiftHue = (rgb, deg) => {
   return hslToRGB(hsl.h, hsl.s, hsl.l);
 };
 
+// function to change color's hue
+const shiftSat = (rgb, deg) => {
+  let hsl = rgbToNHSL(rgb.r, rgb.g, rgb.b);
+
+  if (deg > 100 || deg < -100)
+    throw new RangeError(
+      "amount of hue shifting in shiftHue must be within the range [-100, 100]."
+    );
+
+  hsl.s += deg;
+  if (hsl.s < 0) hsl.s += 100;
+  if (hsl.s > 100) hsl.s -= 100;
+  hsl.h /= 360;
+  hsl.s /= 100;
+  hsl.l /= 100;
+
+  return hslToRGB(hsl.h, hsl.s, hsl.l);
+};
+
 // luminance calculation based on this:
 // https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
 // which is also where these constants are from

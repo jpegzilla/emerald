@@ -23,7 +23,7 @@ selectExportType.addEventListener("input", () => {
 let STORAGE = window.localStorage;
 
 // remember to remove this:
-STORAGE.clear();
+// STORAGE.clear();
 
 let PALETTES =
   STORAGE.getItem("palettes") == undefined
@@ -291,7 +291,9 @@ const paletteControls = (palette, operation, index) => {
         paletteHumanIndex--;
         currentPalette--;
         PALETTES.splice(index, 1);
+        if (PALETTES.length == 0) PALETTES = [[]];
         paletteTotalCount = PALETTES.length;
+        if (currentPalette < 0) currentPalette = 0;
         savePaletteState();
         return palette.remove();
       }, 500);
@@ -363,13 +365,20 @@ const loadSavedPalettes = () => {
     };
     paletteContainer.appendChild(paletteBar);
 
-    let index = Array.from(paletteContainer.children).indexOf(paletteBar);
     deleteButton.addEventListener("click", () =>
-      paletteControls(paletteBar, "remove", index)
+      paletteControls(
+        paletteBar,
+        "remove",
+        Array.from(paletteContainer.children).indexOf(paletteBar)
+      )
     );
 
     exportButton.addEventListener("click", () =>
-      paletteControls(paletteObject, "export", index)
+      paletteControls(
+        paletteObject,
+        "export",
+        Array.from(paletteContainer.children).indexOf(paletteBar)
+      )
     );
 
     palette.forEach(pigment => {
@@ -432,14 +441,25 @@ const addNewPaletteBar = (bgHex, textHex, alsoAddPigment = true) => {
 
   let exportButton = newPaletteBar.getElementsByClassName("export-palette")[0];
   let deleteButton = newPaletteBar.getElementsByClassName("remove-palette")[0];
-  let index = Array.from(paletteContainer.children).indexOf(newPaletteBar);
 
-  deleteButton.addEventListener("click", () =>
-    paletteControls(newPaletteBar, "remove", index)
-  );
+  deleteButton.addEventListener("click", () => {
+    // the index of removal has to be defined in this callback because otherwise,
+    // the index won't update correctly every time a different 'remove' button is
+    // clicked.
+
+    paletteControls(
+      newPaletteBar,
+      "remove",
+      Array.from(paletteContainer.children).indexOf(newPaletteBar)
+    );
+  });
 
   exportButton.addEventListener("click", () =>
-    paletteControls(paletteObject, "export", index)
+    paletteControls(
+      paletteObject,
+      "export",
+      Array.from(paletteContainer.children).indexOf(newPaletteBar)
+    )
   );
 
   paletteTotalCount = PALETTES.length;
@@ -531,13 +551,12 @@ addNewPalette.addEventListener("click", () =>
 
 // generate an entire palette from two colors
 const makeFullPalette = () => {
-  console.log("[PARAMS]", paletteGenParams);
-  // create a fresh palette bar with the two current colors
-  addNewPaletteBar(colorObject.bg.hex, colorObject.text.hex);
+  // the place where the new palette is going to go (unused?)
+  // let index = PALETTES.length - 1;
+  // let newPalette = PALETTES[index];
 
-  // the place where the new palette is going to go
-  let index = PALETTES.length - 1;
-  let newPalette = PALETTES[index];
+  // the amount of colors that need to be generated after the initial one
+  let count = paletteGenParams.count;
 
   // rgb values of currently displayed colors
   let obgRGB = hexToRGBA(colorObject.bg.hex);
@@ -550,18 +569,59 @@ const makeFullPalette = () => {
   bgColors.push(obgRGB);
   txtColors.push(obtxtRGB);
 
-  console.log(bgColors, txtColors);
-
-  let cyan = { r: 251, g: 255, b: 255 };
-
-  console.log("[SHIFTHUE RGB OUT]", shiftHue(cyan, 20));
-  return;
-
   // if color scheme generation setting is gradient
   // use the background color as one endpoint and the text color as the other.
   // generate the palette by interpolating between these two colors with eight steps.
   // in pigments, background color is on the left, text color is on the right.
   // keep that in mind when creating a gradient palette.
+
+  if (paletteGenParams.setting == "gradient") {
+    // create a fresh palette bar with the two current colors
+    addNewPaletteBar(colorObject.bg.hex, colorObject.bg.hex);
+
+    let interpolateColor1 = bgColors[0];
+    let interpolateColor2 = txtColors[0];
+
+    const interpolate = (color1, color2, steps) => {
+      const interpolateColor = (color1, color2, factor) => {
+        if (!factor) factor = 0.5;
+
+        let result = color1.slice();
+        for (let i = 0; i < 3; i++)
+          result[i] = Math.round(result[i] + factor * (color2[i] - color1[i]));
+
+        return result;
+      };
+
+      let stepFactor = 1 / (steps - 1),
+        result = [];
+
+      color1 = [...Object.values(color1)];
+      color2 = [...Object.values(color2)];
+
+      for (let i = 0; i < steps; i++) {
+        result.push(interpolateColor(color1, color2, stepFactor * i));
+      }
+
+      return result;
+    };
+
+    let bgIntp = interpolate(
+      interpolateColor1,
+      interpolateColor2,
+      paletteGenParams.count
+    );
+    for (let i = 1; i < bgIntp.length; i++) {
+      let newBgColor = { r: bgIntp[i][0], g: bgIntp[i][1], b: bgIntp[i][2] };
+      let newTxtColor = { r: bgIntp[i][0], g: bgIntp[i][1], b: bgIntp[i][2] };
+      bgColors.push(newBgColor);
+      txtColors.push(newTxtColor);
+    }
+
+    bgColors.forEach((color, i) => {
+      if (i > 0) addColorToPalette(color, txtColors[i]);
+    });
+  }
 
   // color scheme generation setting is monochrome
   // then each generated pigment should have a background / text pigment
@@ -587,6 +647,22 @@ const makeFullPalette = () => {
   //   } else textAlts.push(newShadeText);
   // }
 
+  if (paletteGenParams.setting == "monochromatic") {
+    // create a fresh palette bar with the two current colors
+    addNewPaletteBar(colorObject.bg.hex, colorObject.bg.hex);
+
+    for (let i = 1; i < count; i++) {
+      let newBgColor = shiftSat(bgColors[i - 1], -paletteGenParams.factor);
+      let newTxtColor = shiftSat(bgColors[i - 1], -paletteGenParams.factor);
+      bgColors.push(newBgColor);
+      txtColors.push(newTxtColor);
+    }
+
+    bgColors.forEach((color, i) => {
+      if (i > 0) addColorToPalette(color, txtColors[i]);
+    });
+  }
+
   // for this function:
   // I need to take the relevant color (background or text)
   // and using that color's rgb values, I'll generate four
@@ -603,17 +679,31 @@ const makeFullPalette = () => {
     return;
   };
 
-  // then, I'll make a loop to create the new palettes similar to
-  // how the user naturally creates them, just by calling addToPalette()
-  // over and over for each of the five pairs.
-  for (let i = 0; i < 4; i++) {
-    let cbg = bgColors[i];
-    let ctxt = txtColors[i];
-    // take the color at bgColors[i] and the one at txtColors[i]
-    // and add them as pigments to the palette
+  if (paletteGenParams.setting == "analogous") {
+    // adds a new palette bar, containing two colors
+    addNewPaletteBar(colorObject.bg.hex, colorObject.text.hex);
+
+    // for however many colors the user decides on in the settings, let's...
+    for (let i = 1; i < count; i++) {
+      // ...create colors based on the previous colors, and shift their hue by
+      // whatever amount the user puts in the settings (10 degrees default)
+      let newBgColor = shiftHue(bgColors[i - 1], paletteGenParams.factor);
+      let newTxtColor = shiftHue(txtColors[i - 1], paletteGenParams.factor);
+
+      // and then add them to a list of pigments to be displayed later
+      bgColors.push(newBgColor);
+      txtColors.push(newTxtColor);
+    }
+
+    // for each color in the generated list...
+    bgColors.forEach((color, i) => {
+      // except for the first one, add them all to the newly created palette
+      if (i > 0) addColorToPalette(color, txtColors[i]);
+    });
   }
 
-  // savePaletteState();
+  // save the palettes in localstorage
+  savePaletteState();
 };
 
 document
