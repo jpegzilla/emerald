@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>emerald.</title>
+
+  <!--  ios meta tags and icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#50c878">
+  <meta name="apple-mobile-web-app-title" content="emerald">
+
+  <!-- SEO TAGS -->
+  <meta name="description" content="emerald is a color palette tool with several useful features.">
+  <meta name="author" content="jpegzilla">
+  <meta name="robots" content="index, follow">
+  <!-- open graph protocol meta tags -->
+  <meta property="og:title" content="emerald - color palette tool.">
+  <meta property="og:description" content="emerald is a simple color palette tool.">
+  <meta property="og:url" content="https://jpegzilla.com/emerald">
+  <meta property="og:site_name" content="emerald - color palette tool.">
+  <meta property="og:image" content="./styles/img/emerald-preview.png">
+  <meta property="og:type" content="website">
+  <!-- twitter card meta tags -->
+  <meta name="twitter:site" content="@jpegzilla">
+  <meta name="twitter:creator" content="@jpegzilla">
+  <meta name="twitter:title" content="emerald.">
+  <meta name="twitter:description" content="emerald is a color palette creation and testing tool with several useful features.">
+  <meta name="twitter:image" content="./styles/img/emerald-preview.png">
+  <meta name="twitter:card" content="summary-large-image">
+  <meta name="application-name" content="emerald">
+  <link rel="author" href="humans.txt">
+  <link rel="canonical" href="https://jpegzilla.com/emerald">
+
+  <!-- ICON TAGS -->
+  <!-- <link rel="stylesheet" href="./styles/main.min.css"> -->
+  <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+  <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="./styles/img/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="./styles/img/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="./styles/img/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="./styles/img/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="./styles/img/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="./styles/img/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="./styles/img/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="./styles/img/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./styles/img/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./styles/img/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./styles/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="./styles/img/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./styles/img/favicon-16x16.png">
+
+  <link rel="manifest" href="./manifest.json">
+  <meta name="msapplication-TileColor" content="#50c878">
+  <meta name="msapplication-TileImage" content="./styles/img/ms-icon-144x144.png">
+  <meta name="theme-color" content="#50c878">
+  <meta name="msapplication-config" content="./browserconfig.xml">
+<link rel="shortcut icon" href="favicon.ico"></head>
+
+<body>
+
+  <div id="preloader">
+    <div class="colorbox-spinner">
+      <div class="colorbox"></div>
+    </div>
+    <div class="preloader-title">emerald.</div>
+  </div>
+
+  <div class="update-container">
+    <div id="updateMessage"><span id="triggerUpdate">an update is available! click here to download it.</span> <span id="closeUpdateMessage">close</span></div>
+  </div>
+
+  <div id="modal-container">
+    <div class="settings-box">
+      <div class="setting-bar random-params">
+        <span>randomization contrast ratio limits:</span>
+        <select id="randomParamsStart">
+          <option>fail</option>
+          <option>aa large</option>
+          <option>aa</option>
+          <option>aaa</option>
+        </select>
+        <span>to</span>
+        <select id="randomParamsEnd">
+          <option>fail</option>
+          <option>aa large</option>
+          <option>aa</option>
+          <option selected>aaa</option>
+        </select>
+      </div>
+
+      <div class="setting-bar dark-mode-switch">
+        <span>emerald theme:</span>
+        <select id="themeSelect">
+          <option>dark</option>
+          <option>light</option>
+        </select>
+      </div>
+
+      <div class="setting-bar generation-params">
+        <span>palette generation type:</span>
+        <select id="paletteGenerationSettings">
+          <option>monochromatic</option>
+          <option>analogous</option>
+          <option>gradient</option>
+        </select>
+      </div>
+
+      <div class="setting-bar generation-count">
+        <label for="generation-count-slider">amount of colors to generate: <span id="color-generation-count">5</span></label>
+        <input id="generation-count-slider" type="range" name="" value="5" max="10">
+      </div>
+
+      <div class="setting-bar generation-seperation-factor">
+        <label for="color-generation-factor">palette generation color modification factor: <span id="color-generation-factor-count">10</span></label>
+        <input id="color-generation-factor" type="range" name="" value="10" min="5" max="100">
+      </div>
+
+
+      <div id="close-settings" class="setting-button">ok!</div>
+      <div id="clear-data" class="setting-button">clear local data (removes all palettes and settings)</div>
+      <a target="_blank" rel="noopener noreferrer" id="report-bug" class="setting-button" href="https://github.com/jpegzilla/emerald/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5Bbug%5D">report bug!</a>
+    </div>
+
+    <div class="message-box">
+      <div class="message-bar">
+        <div class="message-inner"></div>
+        <div id="close-message">ok!</div>
+      </div>
+    </div>
+
+    <div class="export-box">
+      <div class="select-export-type">
+        <span>select export type: </span>
+        <select id="selectExportType">
+          <option>sass</option>
+          <option>css</option>
+          <option>image</option>
+        </select>
+      </div>
+
+      <div class="export-item-container">
+        <pre id="sass-text-container"></pre>
+        <pre id="css-text-container"></pre>
+        <figure id="image-export-container">
+          <canvas id="export-canvas"></canvas>
+        </figure>
+      </div>
+
+      <div id="do-export">export!</div>
+      <div id="close-export">cancel</div>
+    </div>
+  </div>
+
+  <header id="header">
+    <span id="randomizeReminder">press space to randomize</span>
+    <b></b>
+    <span>emerald.<span id="pwaInstallButton">install +</span></span>
+  </header>
+
+  <main>
+
+    <!-- alt-color-display -->
+
+    <div class="alt-color-display hidden">
+      <div id="bg-color-alt-preview">
+
+      </div>
+      <div id="text-color-alt-preview">
+
+      </div>
+    </div>
+
+    <!-- show color info -->
+
+    <div id="color-field">
+      <div class="color-info">
+        <div class="color-name">
+          <div class="color-picker"><span id="showBackgroundColor" class="active">background</span><span id="showTextColor" class="inactive">text</span><span id="showColorPreviews" class="inactive visible">color previews: off</span><span id="showFancyColorNames"
+              class="inactive">css color names</span></div>
+          <div><input spellcheck="false" maxlength="7" autocorrect="off" autocapitalize="off" autocomplete="off" pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" id="hex-code" type="text"></div>
+          <div id="rgb-code"></div>
+          <div id="hsl-code"></div>
+          <div id="css-name">&nbsp;</div>
+        </div>
+
+        <div id="contrast-ratio">
+          <div id="contrast-ratio-string"></div>
+          <div id="contrast-ratio-number"></div>
+        </div>
+        <div class="add-to-palette"><span id="add-to-palette">add to palette</span></div>
+        <div class="open-settings"><span id="open-settings">open settings</span></div>
+      </div>
+
+      <div class="color-previews">
+        <div class="alt-shades-container">
+          <div class="bg-shades-container">
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+          </div>
+          <div class="text-shades-container">
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+            <div class="shade-pigment"><span>#000000</span></div>
+          </div>
+        </div>
+        <div class="small-box-container">
+          <div id="text-color-preview"></div>
+          <div id="bg-color-preview"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="color-controls">
+      <div class="color-buttons">
+        <div class="swap-color-container">
+          <div class="control-button" id="swapColors">swap colors &lrarr;</div>
+        </div>
+        <div class="randomize-controls">
+          <div class="control-button disabled" id="undo">undo &olarr;</div>
+          <div id="randomize-mobile">randomize &#10542;</div>
+          <div class="control-button disabled" id="redo">redo &orarr;</div>
+        </div>
+        <div class="generate-controls">
+          <div id="generate-palette" class="control-button">generate palette</div>
+        </div>
+      </div>
+
+      <div class="color-sliders">
+        <div class="share-buttons">
+          <div class="twitter-button">
+            <a target="_blank" href="https://twitter.com/intent/tweet?source=https%3A%2F%2Fjpegzilla.com%2Femerald&text=emerald%20-%20a%20simple%20color%20palette%20tool%20https%3A%2F%2Fjpegzilla.com%2Femerald&via=jpegzilla" class="twitter-share-button"
+              data-size="large" rel="noopener noreferrer">tweet</a>
+          </div>
+          <div class="github-button">
+            <!-- Place this tag where you want the button to render. -->
+            <a target="_blank" class="github-button" href="https://github.com/jpegzilla/emerald" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star jpegzilla/emerald on GitHub">Star</a>
+          </div>
+        </div>
+
+        <!-- pick background color -->
+
+        <div class="background-picker">
+          <h1><span class="lockColor" id="lockBackground">&#x1F513;</span> background color.</h1>
+          <div class="picker-group">
+            <p>red <span id="redBGValue"></span></p>
+            <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="rInput">
+          </div>
+          <div class="picker-group">
+            <p>green <span id="greenBGValue"></span></p>
+            <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="gInput">
+          </div>
+          <div class="picker-group">
+            <p>blue <span id="blueBGValue"></span></p>
+            <input data-color="rgb(80, 200, 120)" class="colorInput" type="range" min="0" max="255" step="1" id="bInput">
+          </div>
+        </div>
+
+
+
+        <!-- pick text color -->
+
+        <div class="text-picker">
+
+          <h1><span class="lockColor" id="lockText">&#x1F513;</span> text color.</h1>
+          <div class="picker-group">
+            <p>red <span id="redtxtValue"></span></p>
+            <input data-color="rgb(80, 200, 120)" class="colortxtInput" type="range" min="0" max="255" step="1" id="trInput">
+          </div>
+          <div class="picker-group">
+            <p>green <span id="greentxtValue"></span></p>
+            <input data-color="rgb(80, 200, 120)" class="colortxtInput" type="range" min="0" max="255" step="1" id="tgInput">
+          </div>
+          <div class="picker-group">
+            <p>blue <span id="bluetxtValue"></span></p>
+            <input data-color="rgb(80, 200, 120)" class="colortxtInput" type="range" min="0" max="255" step="1" id="tbInput">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer id="paletteView">
+    <h1>palettes. <span id="addNewPalette">add palette +</span></h1>
+    <h2>click a color to copy it! <span id="copiedNotification">copied!</span></h2>
+    <div class="palette-container">
+
+    </div>
+  </footer>
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+<script type="text/javascript" src="main.6bf5cd219781ea977d9a.js"></script></body>
+
+<div id="hiddenElements"></div>
+
+<div id="palettePigmentTemplate">
+  <div></div>
+  <div></div>
+</div>
+<div id="paletteBarTemplate" class="empty">
+  <div class="palette-controls">
+    <span class="export-palette">export palette</span>
+    <span class="remove-palette">remove palette</span><span class='palette-number'></span>
+  </div>
+</div>
+
+<script type="text/javascript">
+  window.isUpdateAvailable = new Promise((resolve, reject) => {
+    if ('serviceWorker' in navigator) {
+      // register service worker file
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(reg => {
+          console.log('[ServiceWorker] registered. ', reg.scope)
+
+          reg.onupdatefound = () => {
+            console.log('[ServiceWorker] update found. requesting update')
+            const installingWorker = reg.installing;
+            installingWorker.onstatechange = () => {
+              switch (installingWorker.state) {
+                case 'installed':
+                  if (navigator.serviceWorker.controller) {
+                    showUpdateMessage();
+                    resolve(true);
+                  } else {
+                    // no update available
+                    resolve(false);
+                  }
+                  break;
+              }
+            };
+          };
+        })
+        .catch(err => console.error('[ServiceWorker: ERROR]', err));
+    }
+  });
+</script>
+
+
+<script>
+  window.twttr = (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0],
+      t = window.twttr || {};
+    if (d.getElementById(id)) return t;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js, fjs);
+
+    t._e = [];
+    t.ready = function(f) {
+      t._e.push(f);
+    };
+
+    return t;
+  }(document, "script", "twitter-wjs"));
+</script>
+
+<!-- <script src="./scripts/main.js" defer type="module" charset="utf-8"></script> -->
+
+</html>
