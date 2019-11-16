@@ -1,6 +1,6 @@
-let palettes = {};
+export const palettes = {};
 
-let simpleColors = {
+export const simpleColors = {
   aliceblue: "#f0f8ff",
   antiquewhite: "#faebd7",
   aqua: "#00ffff",
@@ -151,7 +151,7 @@ let simpleColors = {
   yellowgreen: "#9acd32"
 };
 
-let colorLib = {
+export const colorLib = {
   "#4c4f56": "Abbey",
   "#0048ba": "Absolute Zero",
   "#1b1404": "Acadia",

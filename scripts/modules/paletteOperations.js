@@ -1,13 +1,33 @@
 // palette handling
-const addToPalette = document.getElementById("add-to-palette");
-const finalizeExportButton = document.getElementById("do-export");
-const selectExportType = document.getElementById("selectExportType");
-const exportTextContainer = document.getElementsByClassName(
+import { globalColors, paletteGenParams, firstPalette } from "./../main.js";
+
+import {
+  rgbToHex,
+  hexToRGBA,
+  shiftSat,
+  shiftHue,
+  FANCY_COLOR_NAMES,
+  scrollSmooth,
+  setColorNames,
+  findNearestColor,
+  toCamelCase,
+  propSort,
+  mobilecheck
+} from "./utils.js";
+
+import { drawSwatches, drawSwatchesMobile } from "./canvasOperations.js";
+
+import { openExportModal } from "./smUtils.js";
+
+export const addToPalette = document.getElementById("add-to-palette");
+export const finalizeExportButton = document.getElementById("do-export");
+export const selectExportType = document.getElementById("selectExportType");
+export const exportTextContainer = document.getElementsByClassName(
   "export-item-container"
 )[0];
 
-let currentPaletteIndex;
-let currentPaletteObject;
+export let currentPaletteIndex;
+export let currentPaletteObject;
 
 let exportType = selectExportType.value;
 selectExportType.addEventListener("input", () => {
@@ -20,10 +40,7 @@ selectExportType.addEventListener("input", () => {
   );
 });
 
-let STORAGE = window.localStorage;
-
-// remember to remove this:
-// STORAGE.clear();
+export const STORAGE = window.localStorage;
 
 let PALETTES =
   STORAGE.getItem("palettes") == undefined
@@ -210,8 +227,8 @@ const exportPalette = (palette, index, openmodal = true) => {
   let exportingPalette = PALETTES[index];
 
   let wereColorsFancy = false;
-  if (FANCY_COLOR_NAMES == false) {
-    FANCY_COLOR_NAMES = true;
+  if (FANCY_COLOR_NAMES.on == false) {
+    FANCY_COLOR_NAMES.on = true;
     setColorNames();
   }
 
@@ -231,7 +248,7 @@ const exportPalette = (palette, index, openmodal = true) => {
   };
 
   if (!wereColorsFancy) {
-    FANCY_COLOR_NAMES = false;
+    FANCY_COLOR_NAMES.on = false;
     setColorNames();
   }
   makeExportContent(exportObject);
@@ -528,8 +545,8 @@ const addColorToPalette = (bgColor, textColor) => {
 };
 
 addToPalette.addEventListener("click", () => {
-  let bgColor = colorObject.bg.rgb;
-  let textColor = colorObject.text.rgb;
+  let bgColor = globalColors.colorObject.bg.rgb;
+  let textColor = globalColors.colorObject.text.rgb;
 
   let bgHex = rgbToHex(bgColor.r, bgColor.g, bgColor.b);
   let textHex = rgbToHex(textColor.r, textColor.g, textColor.b);
@@ -539,14 +556,17 @@ addToPalette.addEventListener("click", () => {
 
   addColorToPalette(bgColor, textColor);
 
-  if (firstPalette == true) {
+  if (firstPalette.first == true) {
     scrollSmooth(window, "bottom");
-    firstPalette = false;
+    firstPalette.first = false;
   }
 });
 
 addNewPalette.addEventListener("click", () =>
-  addNewPaletteBar(colorObject.bg.hex, colorObject.text.hex)
+  addNewPaletteBar(
+    globalColors.colorObject.bg.hex,
+    globalColors.colorObject.text.hex
+  )
 );
 
 // generate an entire palette from two colors
@@ -559,8 +579,8 @@ const makeFullPalette = () => {
   let count = paletteGenParams.count;
 
   // rgb values of currently displayed colors
-  let obgRGB = hexToRGBA(colorObject.bg.hex);
-  let obtxtRGB = hexToRGBA(colorObject.text.hex);
+  let obgRGB = hexToRGBA(globalColors.colorObject.bg.hex);
+  let obtxtRGB = hexToRGBA(globalColors.colorObject.text.hex);
 
   // arrays for putting the generated colors into
   let bgColors = [];
@@ -577,7 +597,10 @@ const makeFullPalette = () => {
 
   if (paletteGenParams.setting == "gradient") {
     // create a fresh palette bar with the two current colors
-    addNewPaletteBar(colorObject.bg.hex, colorObject.bg.hex);
+    addNewPaletteBar(
+      globalColors.colorObject.bg.hex,
+      globalColors.colorObject.bg.hex
+    );
 
     let interpolateColor1 = bgColors[0];
     let interpolateColor2 = txtColors[0];
@@ -649,7 +672,10 @@ const makeFullPalette = () => {
 
   if (paletteGenParams.setting == "monochromatic") {
     // create a fresh palette bar with the two current colors
-    addNewPaletteBar(colorObject.bg.hex, colorObject.bg.hex);
+    addNewPaletteBar(
+      globalColors.colorObject.bg.hex,
+      globalColors.colorObject.bg.hex
+    );
 
     for (let i = 1; i < count; i++) {
       let newBgColor = shiftSat(bgColors[i - 1], -paletteGenParams.factor);
@@ -681,7 +707,10 @@ const makeFullPalette = () => {
 
   if (paletteGenParams.setting == "analogous") {
     // adds a new palette bar, containing two colors
-    addNewPaletteBar(colorObject.bg.hex, colorObject.text.hex);
+    addNewPaletteBar(
+      globalColors.colorObject.bg.hex,
+      globalColors.colorObject.text.hex
+    );
 
     // for however many colors the user decides on in the settings, let's...
     for (let i = 1; i < count; i++) {

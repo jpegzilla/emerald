@@ -7,15 +7,15 @@ const FILES_TO_CACHE = [
   "./styles/main.min.css",
   // "./dist/main.js",
   "./scripts/main.js",
-  "./scripts/canvasOperations.js",
-  "./scripts/paletteOperations.js",
-  "./scripts/palettes.js",
-  "./scripts/smUtils.js",
-  "./scripts/utils.js"
+  "./scripts/modules/canvasOperations.js",
+  "./scripts/modules/paletteOperations.js",
+  "./scripts/modules/palettes.js",
+  "./scripts/modules/smUtils.js",
+  "./scripts/modules/utils.js"
 ];
 
-const EMERALD_VERSION = "v0116";
-const CACHE_NAME = "emeraldCache_v0116";
+const EMERALD_VERSION = "v0116-m";
+const CACHE_NAME = "emeraldCache_v0116-m";
 const cacheWhitelist = [CACHE_NAME];
 
 self.addEventListener("install", event => {

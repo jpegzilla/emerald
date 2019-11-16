@@ -1,8 +1,18 @@
-const documentTitle = document.title;
+import {
+  colorDisplay,
+  colorName,
+  globalColors,
+  currentColorSetting,
+  contrastRatioStringDisplay,
+  contrastRatioNumberDisplay
+} from "./../main.js";
+import { simpleColors, colorLib } from "./palettes.js";
 
-let FANCY_COLOR_NAMES = false;
+export const FANCY_COLOR_NAMES = {
+  on: false
+};
 
-let CURRENT_ERR = "";
+export const CURRENT_ERR = "";
 
 const LUM_LOWER = 0.03928;
 const LUM_DIVISOR_H = 12.92;
@@ -15,23 +25,22 @@ const LUM_R_ADDEND = 0.7152;
 const LUM_G_ADDEND = 0.0722;
 const RGB_MAX = 255;
 
-let colorHistory = [];
-let colorHistoryIndex = 0;
-let initialColorHistory = true;
+export let history = {
+  colorHistory: [],
+  colorHistoryIndex: 0,
+  initialColorHistory: true
+};
 
-let textLocked = false;
-let bgLocked = false;
+export const locks = {
+  textLocked: false,
+  bgLocked: false
+};
 
-let initColors = { background: "#50c878", text: "#eaeaea" };
+export let initColors = { background: "#50c878", text: "#eaeaea" };
 
-let currentColors = { background: "#50c878", text: "#eaeaea" };
+export let currentColors = { background: "#50c878", text: "#eaeaea" };
 
-const backgroundShades = document.getElementsByClassName(
-  "bg-shades-container"
-)[0];
-const textShades = document.getElementsByClassName("text-shades-container")[0];
-
-const objectFlip = obj => {
+export const objectFlip = obj => {
   const ret = {};
   Object.keys(obj).forEach(key => {
     ret[obj[key]] = key;
@@ -39,10 +48,16 @@ const objectFlip = obj => {
   return ret;
 };
 
+const backgroundShades = document.getElementsByClassName(
+  "bg-shades-container"
+)[0];
+
+const textShades = document.getElementsByClassName("text-shades-container")[0];
+
 let cssColorNames;
 
-const setColorNames = () => {
-  if (FANCY_COLOR_NAMES == true) {
+export const setColorNames = () => {
+  if (FANCY_COLOR_NAMES.on == true) {
     cssColorNames = objectFlip(colorLib);
   } else {
     cssColorNames = simpleColors;
@@ -53,10 +68,10 @@ setColorNames();
 
 // usage: hexToColorName(cssColorNames, "#ffffff")
 
-const hexToColorName = (colors, hex) =>
+export const hexToColorName = (colors, hex) =>
   Object.keys(colors).find(key => colors[key] === hex);
 
-const hexToRGBA = hex => {
+export const hexToRGBA = hex => {
   if (!hex || typeof hex != "string" || hex.length < 3) return false;
   if (hex.split("").indexOf("#") == 0) hex = hex.substring(1);
 
@@ -131,7 +146,7 @@ const hexToRGBA = hex => {
   }
 };
 
-const hslToRGB = (h, s, l) => {
+export const hslToRGB = (h, s, l) => {
   let r, g, b;
 
   if (s == 0) r = g = b = l;
@@ -161,7 +176,7 @@ const hslToRGB = (h, s, l) => {
 };
 
 // returns h, s, and l in the set [0, 1]
-const rgbToDHSL = (r, g, b) => {
+export const rgbToDHSL = (r, g, b) => {
   (r /= 255), (g /= 255), (b /= 255);
   let max = Math.max(r, g, b),
     min = Math.min(r, g, b);
@@ -190,7 +205,7 @@ const rgbToDHSL = (r, g, b) => {
   return { h: h, s: s, l: l };
 };
 
-const rgbToHSL = (r, g, b) => {
+export const rgbToHSL = (r, g, b) => {
   (r /= 255), (g /= 255), (b /= 255);
 
   let max = Math.max(r, g, b);
@@ -221,7 +236,7 @@ const rgbToHSL = (r, g, b) => {
 };
 
 // rgb to NumberHSL
-const rgbToNHSL = (r, g, b) => {
+export const rgbToNHSL = (r, g, b) => {
   (r /= 255), (g /= 255), (b /= 255);
 
   let max = Math.max(r, g, b);
@@ -254,7 +269,7 @@ const rgbToNHSL = (r, g, b) => {
 };
 
 // function to change color's hue
-const shiftHue = (rgb, deg) => {
+export const shiftHue = (rgb, deg) => {
   let hsl = rgbToNHSL(rgb.r, rgb.g, rgb.b);
 
   if (deg > 100 || deg < 0)
@@ -273,7 +288,7 @@ const shiftHue = (rgb, deg) => {
 };
 
 // function to change color's hue
-const shiftSat = (rgb, deg) => {
+export const shiftSat = (rgb, deg) => {
   let hsl = rgbToNHSL(rgb.r, rgb.g, rgb.b);
 
   if (deg > 100 || deg < -100)
@@ -294,7 +309,7 @@ const shiftSat = (rgb, deg) => {
 // luminance calculation based on this:
 // https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
 // which is also where these constants are from
-const calculateLuminance = (r, g, b) => {
+export const calculateLuminance = (r, g, b) => {
   const srgb = [r, g, b].map(val => val / 255);
   const [R, G, B] = srgb.map(
     val =>
@@ -309,7 +324,7 @@ const calculateLuminance = (r, g, b) => {
 };
 
 // best: 7:1 ratio (getContrastRatio returns 7)
-const getContrastRatio = (text, bg) => {
+export const getContrastRatio = (text, bg) => {
   let txRGB = hexToRGBA(text);
   let bgRGB = hexToRGBA(bg);
 
@@ -330,7 +345,7 @@ const getContrastRatio = (text, bg) => {
 };
 
 // change hex color shade by amount
-const changeShade = (color, amount) => {
+export const changeShade = (color, amount) => {
   let usePound = false;
 
   if (color[0] == "#") {
@@ -361,9 +376,9 @@ const changeShade = (color, amount) => {
   );
 };
 
-const rgbToHex = (r, g, b) => `#${hex(r)}${hex(g)}${hex(b)}`;
+export const rgbToHex = (r, g, b) => `#${hex(r)}${hex(g)}${hex(b)}`;
 
-const hexDigits = [
+export const hexDigits = [
   "0",
   "1",
   "2",
@@ -382,13 +397,13 @@ const hexDigits = [
   "f"
 ];
 
-const hex = num => {
+export const hex = num => {
   return isNaN(num)
     ? "00"
     : hexDigits[(num - (num % 16)) / 16] + hexDigits[num % 16];
 };
 
-const wcagLevels = {
+export const wcagLevels = {
   fail: {
     range: [0, 3]
   },
@@ -403,22 +418,24 @@ const wcagLevels = {
   }
 };
 
-let colorHexArray = Array.from(Object.values(cssColorNames));
-let fancyColorHexArray = Array.from(Object.values(objectFlip(colorLib)));
+export const colorHexArray = Array.from(Object.values(cssColorNames));
+export const fancyColorHexArray = Array.from(
+  Object.values(objectFlip(colorLib))
+);
 let lastKnownClosestColor;
 
 // findNearestColor finds the name in the color lib that is closest to the color
 // supplies as an argument
-const findNearestColor = hex => {
+export const findNearestColor = hex => {
   if (typeof hex !== "string")
     throw new Error(
       `findNearestColor needs a hex color in string format. the parameter passed was type ${typeof hex}.`
     );
   let rgba1 = hexToRGBA(hex);
-  let delta = FANCY_COLOR_NAMES == false ? 3 * 256 * 256 : 9 * 2332 * 2332;
+  let delta = FANCY_COLOR_NAMES.on == false ? 3 * 256 * 256 : 9 * 2332 * 2332;
   let rgba2, result;
 
-  if (FANCY_COLOR_NAMES === false) {
+  if (FANCY_COLOR_NAMES.on === false) {
     colorHexArray.forEach(colorInArray => {
       rgba2 = hexToRGBA(colorInArray);
 
@@ -469,7 +486,7 @@ const findNearestColor = hex => {
   return results;
 };
 
-const findNearestAAAColor = (background, text, nearestTo = "text") => {
+export const findNearestAAAColor = (background, text, nearestTo = "text") => {
   // get current contrast ratio
   let currCr = getContrastRatio(text, background).number;
   // return same colors if it's already a ratio >= 7
@@ -517,7 +534,7 @@ const findNearestAAAColor = (background, text, nearestTo = "text") => {
 };
 
 // this is a method for allowing the user to copy a color swatch's contents by clicking on it
-const setColorSwatchListeners = () => {
+export const setColorSwatchListeners = () => {
   const copyColor = (element, e) => {
     e.preventDefault();
     window.getSelection().selectAllChildren(element);
@@ -540,7 +557,7 @@ const setColorSwatchListeners = () => {
 setColorSwatchListeners();
 
 // this is called to update global colors every time a color slider is changed
-const setComputedColors = (pushToHistory = false) => {
+export const setComputedColors = (pushToHistory = false) => {
   setColorNames();
 
   let bgrgb = getComputedStyle(colorDisplay).backgroundColor.match(
@@ -572,11 +589,19 @@ const setComputedColors = (pushToHistory = false) => {
     header.classList.remove("black");
   }
 
-  defbgRGB = { r: bgrgb[1], g: bgrgb[2], b: bgrgb[3] };
-  defbgHex = rgbToHex(defbgRGB.r, defbgRGB.g, defbgRGB.b);
+  globalColors.defbgRGB = { r: bgrgb[1], g: bgrgb[2], b: bgrgb[3] };
+  globalColors.defbgHex = rgbToHex(
+    globalColors.defbgRGB.r,
+    globalColors.defbgRGB.g,
+    globalColors.defbgRGB.b
+  );
 
-  deftxtRGB = { r: txtrgb[1], g: txtrgb[2], b: txtrgb[3] };
-  deftxtHex = rgbToHex(deftxtRGB.r, deftxtRGB.g, deftxtRGB.b);
+  globalColors.deftxtRGB = { r: txtrgb[1], g: txtrgb[2], b: txtrgb[3] };
+  globalColors.deftxtHex = rgbToHex(
+    globalColors.deftxtRGB.r,
+    globalColors.deftxtRGB.g,
+    globalColors.deftxtRGB.b
+  );
 
   let bgCssName = document.getElementById("css-name");
 
@@ -592,34 +617,61 @@ const setComputedColors = (pushToHistory = false) => {
   let rgbBGVal = document.getElementById("rgb-code");
   let hslBGVal = document.getElementById("hsl-code");
 
-  let hslVals = rgbToHSL(defbgRGB.r, defbgRGB.g, defbgRGB.b);
-  let hsltxtVals = rgbToHSL(deftxtRGB.r, deftxtRGB.g, deftxtRGB.b);
+  let hslVals = rgbToHSL(
+    globalColors.defbgRGB.r,
+    globalColors.defbgRGB.g,
+    globalColors.defbgRGB.b
+  );
+  let hsltxtVals = rgbToHSL(
+    globalColors.deftxtRGB.r,
+    globalColors.deftxtRGB.g,
+    globalColors.deftxtRGB.b
+  );
 
-  let currentContrast = getContrastRatio(deftxtHex, defbgHex);
+  let currentContrast = getContrastRatio(
+    globalColors.deftxtHex,
+    globalColors.defbgHex
+  );
+
   let contrastRatioNumber = currentContrast.number;
   let contrastRatioString = currentContrast.string;
 
-  let bgColorName = hexToColorName(cssColorNames, defbgHex);
-  let txtColorName = hexToColorName(cssColorNames, deftxtHex);
+  let bgColorName = hexToColorName(cssColorNames, globalColors.defbgHex);
+  let txtColorName = hexToColorName(cssColorNames, globalColors.deftxtHex);
+
+  let oldColorObject = globalColors.colorObject;
+
+  globalColors.colorObject = {
+    bg: { rgb: globalColors.defbgRGB, hex: globalColors.defbgHex },
+    text: { rgb: globalColors.deftxtRGB, hex: globalColors.deftxtHex }
+  };
 
   if (currentColorSetting == "background") {
-    hexBGVal.value = defbgHex;
-    rgbBGVal.innerText = `rgb(${defbgRGB.r}, ${defbgRGB.g}, ${defbgRGB.b})`;
+    hexBGVal.value = globalColors.defbgHex;
+    rgbBGVal.innerText = `rgb(${globalColors.defbgRGB.r}, ${
+      globalColors.defbgRGB.g
+    }, ${globalColors.defbgRGB.b})`;
     hslBGVal.innerText = `hsl(${hslVals.h}, ${hslVals.s}, ${hslVals.l})`;
 
     bgCssName.innerText = bgColorName
       ? `color name (actual): ${bgColorName.toLowerCase()}`
-      : `color name (closest): ${findNearestColor(defbgHex).toLowerCase()}`;
-  } else if ((currentColorSetting = "text")) {
-    hexBGVal.value = deftxtHex;
-    rgbBGVal.innerText = `rgb(${deftxtRGB.r}, ${deftxtRGB.g}, ${deftxtRGB.b})`;
+      : `color name (closest): ${findNearestColor(
+          globalColors.defbgHex
+        ).toLowerCase()}`;
+  } else if (currentColorSetting == "text") {
+    hexBGVal.value = globalColors.deftxtHex;
+    rgbBGVal.innerText = `rgb(${globalColors.deftxtRGB.r}, ${
+      globalColors.deftxtRGB.g
+    }, ${globalColors.deftxtRGB.b})`;
     hslBGVal.innerText = `hsl(${hsltxtVals.h}, ${hsltxtVals.s}, ${
       hsltxtVals.l
     })`;
 
     bgCssName.innerText = txtColorName
       ? `color name (actual): ${txtColorName.toLowerCase()}`
-      : `color name (closest): ${findNearestColor(deftxtHex).toLowerCase()}`;
+      : `color name (closest): ${findNearestColor(
+          globalColors.deftxtHex
+        ).toLowerCase()}`;
   }
 
   rBGVal.innerText = bgrgb[1];
@@ -648,25 +700,18 @@ const setComputedColors = (pushToHistory = false) => {
     }
   }
 
-  let oldColorObject = colorObject;
-
-  colorObject = {
-    bg: { rgb: defbgRGB, hex: defbgHex },
-    text: { rgb: deftxtRGB, hex: deftxtHex }
-  };
-
-  if (initialColorHistory == true && pushToHistory == true) {
-    initialColorHistory = false;
-    colorHistory.push(colorObject);
+  if (history.initialColorHistory == true && pushToHistory == true) {
+    history.initialColorHistory = false;
+    history.colorHistory.push(globalColors.colorObject);
   }
 
   if (oldColorObject != undefined && pushToHistory == true) {
-    colorHistory.push(colorObject);
-    colorHistoryIndex++;
+    history.colorHistory.push(globalColors.colorObject);
+    history.colorHistoryIndex++;
   }
 
-  const bgAlts = [colorObject.bg.hex];
-  const textAlts = [colorObject.text.hex];
+  const bgAlts = [globalColors.colorObject.bg.hex];
+  const textAlts = [globalColors.colorObject.text.hex];
 
   for (let i = 1; i < 6; i++) {
     let newShadeBg, newShadeText;
@@ -729,9 +774,11 @@ const setComputedColors = (pushToHistory = false) => {
     box.children[0].textContent = textAlts[i].toString();
     manageBoxTextColor(box);
   });
+
+  enableScroll();
 };
 
-const mobilecheck = () => {
+export const mobilecheck = () => {
   let check = false;
   (a => {
     if (
@@ -751,7 +798,7 @@ const mobilecheck = () => {
 
 // left: 37, up: 38, right: 39, down: 40,
 // spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
-var keys = {
+let keys = {
   37: 1,
   38: 1,
   39: 1,
@@ -771,7 +818,7 @@ const preventDefaultForScrollKeys = e => {
   }
 };
 
-const disableScroll = () => {
+export const disableScroll = () => {
   if (window.addEventListener)
     window.addEventListener("DOMMouseScroll", preventDefault, false);
   document.addEventListener("wheel", preventDefault, {
@@ -783,7 +830,7 @@ const disableScroll = () => {
   document.onkeydown = preventDefaultForScrollKeys;
 };
 
-const enableScroll = () => {
+export const enableScroll = () => {
   if (window.removeEventListener)
     window.removeEventListener("DOMMouseScroll", preventDefault, false);
   document.removeEventListener("wheel", preventDefault, {
@@ -795,7 +842,7 @@ const enableScroll = () => {
   document.onkeydown = null;
 };
 
-const selectText = element => {
+export const selectText = element => {
   element = document.getElementById(element);
 
   if (document.body.createTextRange) {
@@ -813,7 +860,7 @@ const selectText = element => {
   }
 };
 
-const geturlvars = () => {
+export const geturlvars = () => {
   let vars = {};
   let regex = /[?&]+([^=&]+)=([^&]*)/gi;
   window.location.href.replace(regex, (match, key, val) => (vars[key] = val));
@@ -834,7 +881,7 @@ const showUpdateMessage = () => {
   );
 };
 
-const scrollSmooth = (parent, target) => {
+export const scrollSmooth = (parent, target) => {
   if (target == "bottom") {
     parent.scrollTo({
       behavior: "smooth",
@@ -850,7 +897,7 @@ const scrollSmooth = (parent, target) => {
   }
 };
 
-const propSort = prop => {
+export const propSort = prop => {
   let order = 1;
 
   if (prop[0] === "-") {
@@ -864,7 +911,7 @@ const propSort = prop => {
       : a[prop].localeCompare(b[prop]);
 };
 
-const toCamelCase = string =>
+export const toCamelCase = string =>
   string
     .replace(
       /(?:^\w|[A-Z]|\b\w)/g,

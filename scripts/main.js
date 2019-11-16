@@ -1,15 +1,46 @@
-let defbgRGB, deftxtRGB, defbgHex, deftxtHex, colorObject, globalTheme;
-let firstPalette = true;
+// remember to remove this:
+// window.localStorage.clear();
+import "./../styles/main.min.css";
+
+import {
+  setComputedColors,
+  geturlvars,
+  disableScroll,
+  enableScroll,
+  locks,
+  history,
+  hexToRGBA,
+  getContrastRatio,
+  wcagLevels,
+  FANCY_COLOR_NAMES
+} from "./modules/utils.js";
+
+import { STORAGE } from "./modules/paletteOperations.js";
+
+import { addToPalette } from "./modules/paletteOperations.js";
+
+import { openSettings } from "./modules/smUtils.js";
+
+export const globalColors = {
+  defbgRGB: null,
+  deftxtRGB: null,
+  defbgHex: null,
+  deftxtHex: null,
+  colorObject: null,
+  globalTheme: null
+};
+
+export const firstPalette = { first: true };
 let contrastRatiosSet = false;
 let initialRandomize = true;
-let currentColorSetting = "background";
-const colorDisplay = document.getElementById("color-field");
-const colorName = document.getElementsByClassName("color-name")[0];
+export const currentColorSetting = "background";
+export const colorDisplay = document.getElementById("color-field");
+export const colorName = document.getElementsByClassName("color-name")[0];
 const contrastRatioDisplay = document.getElementById("contrast-ratio");
-const contrastRatioStringDisplay = document.getElementById(
+export const contrastRatioStringDisplay = document.getElementById(
   "contrast-ratio-string"
 );
-const contrastRatioNumberDisplay = document.getElementById(
+export const contrastRatioNumberDisplay = document.getElementById(
   "contrast-ratio-number"
 );
 const colorPicker = document.getElementsByClassName("color-picker")[0];
@@ -54,7 +85,7 @@ let colorPaletteCount = 5;
 let colorSeperationFactor = 10;
 
 // initialize palette generation parameters
-let paletteGenParams = {
+export const paletteGenParams = {
   setting: paletteGenerationSettings.children[0].innerText,
   count: colorPaletteCount,
   factor: colorSeperationFactor
@@ -68,8 +99,7 @@ disableScroll();
 
 window.onload = () => {
   setComputedColors(true);
-
-  preloader = document.getElementById("preloader");
+  let preloader = document.getElementById("preloader");
 
   preloader.classList.add("hidden");
   BODY.classList.add("scroll");
@@ -139,13 +169,13 @@ window.onload = () => {
     if (hexCodeInput.value.length == 7) setCorrectedColor();
   });
 
-  bginputs.red.value = defbgRGB.r;
-  bginputs.green.value = defbgRGB.g;
-  bginputs.blue.value = defbgRGB.b;
+  bginputs.red.value = globalColors.defbgRGB.r;
+  bginputs.green.value = globalColors.defbgRGB.g;
+  bginputs.blue.value = globalColors.defbgRGB.b;
 
-  txtinputs.red.value = deftxtRGB.r;
-  txtinputs.green.value = deftxtRGB.g;
-  txtinputs.blue.value = deftxtRGB.b;
+  txtinputs.red.value = globalColors.deftxtRGB.r;
+  txtinputs.green.value = globalColors.deftxtRGB.g;
+  txtinputs.blue.value = globalColors.deftxtRGB.b;
 
   // update colors and variables containing updated colors;
   const updateBG = (rgb, scc = true) => {
@@ -217,7 +247,9 @@ window.onload = () => {
     const factor = parseInt(colorSeperationFactorSlider.value);
     colorGenerationCount.textContent = count;
     colorFactorCount.textContent = factor;
-    paletteGenParams = { setting: setting, count: count, factor: factor };
+    paletteGenParams.setting = setting;
+    paletteGenParams.factor = factor;
+    paletteGenParams.count = count;
   };
 
   colorPaletteGenerationSwitch.addEventListener("input", setPaletteGenParams);
@@ -228,11 +260,11 @@ window.onload = () => {
     STORAGE.getItem("darkMode") != undefined &&
     STORAGE.getItem("darkMode") == "false"
   ) {
-    globalTheme = "light";
+    globalColors.globalTheme = "light";
     themeSelect.selectedIndex = 1;
     BODY.classList.remove("dark");
   } else {
-    globalTheme = "dark";
+    globalColors.globalTheme = "dark";
     themeSelect.selectedIndex = 0;
     BODY.classList.add("dark");
   }
@@ -257,17 +289,23 @@ window.onload = () => {
   };
 
   const setRandomColors = () => {
-    if (bgLocked && textLocked) return false;
+    if (locks.bgLocked && locks.textLocked) return false;
 
-    if (colorHistory.length > 0 && initialRandomize == true) {
+    if (history.colorHistory.length > 0 && initialRandomize == true) {
       initialRandomize = false;
       Array.from(document.getElementsByClassName("control-button")).forEach(
         elem => elem.classList.remove("disabled")
       );
     }
 
-    let color1 = bgLocked === true ? colorObject.bg.hex : getRandomColor();
-    let color2 = textLocked === true ? colorObject.text.hex : getRandomColor();
+    let color1 =
+      locks.bgLocked === true
+        ? globalColors.colorObject.bg.hex
+        : getRandomColor();
+    let color2 =
+      locks.textLocked === true
+        ? globalColors.colorObject.text.hex
+        : getRandomColor();
 
     let color1RGB = hexToRGBA(color1);
     let color2RGB = hexToRGBA(color2);
@@ -389,12 +427,12 @@ window.onload = () => {
   }
 
   swapColors.addEventListener("click", () => {
-    bginputs.red.value = colorObject.text.rgb.r;
-    bginputs.green.value = colorObject.text.rgb.g;
-    bginputs.blue.value = colorObject.text.rgb.b;
-    txtinputs.red.value = colorObject.bg.rgb.r;
-    txtinputs.green.value = colorObject.bg.rgb.g;
-    txtinputs.blue.value = colorObject.bg.rgb.b;
+    bginputs.red.value = globalColors.colorObject.text.rgb.r;
+    bginputs.green.value = globalColors.colorObject.text.rgb.g;
+    bginputs.blue.value = globalColors.colorObject.text.rgb.b;
+    txtinputs.red.value = globalColors.colorObject.bg.rgb.r;
+    txtinputs.green.value = globalColors.colorObject.bg.rgb.g;
+    txtinputs.blue.value = globalColors.colorObject.bg.rgb.b;
 
     let bRGB = `rgb(${bginputs.red.value}, ${bginputs.green.value}, ${
       bginputs.blue.value
@@ -471,31 +509,35 @@ window.onload = () => {
   // undo and redo stuff
 
   const changeColorHistory = delta => {
-    if (colorHistory[colorHistoryIndex + delta] !== undefined) {
+    if (history.colorHistory[history.colorHistoryIndex + delta] !== undefined) {
       // if (delta == -1) {
       //   colorHistory.splice(colorHistoryIndex, 1);
       // }
 
-      colorHistoryIndex += delta;
-      colorHistoryIndex =
-        colorHistoryIndex < 0
+      history.colorHistoryIndex += delta;
+      history.colorHistoryIndex =
+        history.colorHistoryIndex < 0
           ? 0
-          : colorHistoryIndex > colorHistory.length - 1
-            ? colorHistory.length - 1
-            : colorHistoryIndex;
+          : history.colorHistoryIndex > history.colorHistory.length - 1
+            ? history.colorHistory.length - 1
+            : history.colorHistoryIndex;
 
-      let color1RGB = hexToRGBA(colorHistory[colorHistoryIndex].bg.hex);
-      let color2RGB = hexToRGBA(colorHistory[colorHistoryIndex].text.hex);
+      let color1RGB = hexToRGBA(
+        history.colorHistory[history.colorHistoryIndex].bg.hex
+      );
+      let color2RGB = hexToRGBA(
+        history.colorHistory[history.colorHistoryIndex].text.hex
+      );
 
       let nbgRGB = `rgb(${color1RGB.r}, ${color1RGB.g}, ${color1RGB.b})`;
       let ntxtRGB = `rgb(${color2RGB.r}, ${color2RGB.g}, ${color2RGB.b})`;
 
-      bginputs.red.value = colorObject.bg.rgb.r;
-      bginputs.green.value = colorObject.bg.rgb.g;
-      bginputs.blue.value = colorObject.bg.rgb.b;
-      txtinputs.red.value = colorObject.text.rgb.r;
-      txtinputs.green.value = colorObject.text.rgb.g;
-      txtinputs.blue.value = colorObject.text.rgb.b;
+      bginputs.red.value = globalColors.colorObject.bg.rgb.r;
+      bginputs.green.value = globalColors.colorObject.bg.rgb.g;
+      bginputs.blue.value = globalColors.colorObject.bg.rgb.b;
+      txtinputs.red.value = globalColors.colorObject.text.rgb.r;
+      txtinputs.green.value = globalColors.colorObject.text.rgb.g;
+      txtinputs.blue.value = globalColors.colorObject.text.rgb.b;
 
       updateBG(nbgRGB, false);
       updateTxt(ntxtRGB, false);
@@ -503,12 +545,12 @@ window.onload = () => {
       setComputedColors(false);
     }
 
-    if (colorHistory[colorHistoryIndex + 1] == undefined) {
+    if (history.colorHistory[history.colorHistoryIndex + 1] == undefined) {
       redo.classList.add("disabled");
     } else {
       redo.classList.remove("disabled");
     }
-    if (colorHistory[colorHistoryIndex - 1] == undefined) {
+    if (history.colorHistory[history.colorHistoryIndex - 1] == undefined) {
       undo.classList.add("disabled");
     } else {
       undo.classList.remove("disabled");
@@ -537,29 +579,29 @@ window.onload = () => {
 
     element == lockBg
       ? locked == true
-        ? (bgLocked = true)
-        : (bgLocked = false)
+        ? (locks.bgLocked = true)
+        : (locks.bgLocked = false)
       : locked == true
-        ? (textLocked = true)
-        : (textLocked = false);
+        ? (locks.textLocked = true)
+        : (locks.textLocked = false);
 
-    if (bgLocked == true) {
+    if (locks.bgLocked) {
       for (let elem in bginputs) {
         bginputs[elem].disabled = true;
       }
     }
-    if (bgLocked == false) {
+    if (!locks.bgLocked) {
       for (let elem in bginputs) {
         bginputs[elem].disabled = false;
       }
     }
 
-    if (textLocked == true) {
+    if (locks.textLocked) {
       for (let elem in txtinputs) {
         txtinputs[elem].disabled = true;
       }
     }
-    if (textLocked == false) {
+    if (!locks.textLocked) {
       for (let elem in txtinputs) {
         txtinputs[elem].disabled = false;
       }
@@ -638,11 +680,7 @@ showFancyColorNames.addEventListener("click", () => {
       ? "fancy color names"
       : "css color names";
 
-  if (FANCY_COLOR_NAMES == true) {
-    FANCY_COLOR_NAMES = false;
-  } else if (FANCY_COLOR_NAMES == false) {
-    FANCY_COLOR_NAMES = true;
-  }
+  FANCY_COLOR_NAMES.on = !FANCY_COLOR_NAMES.on;
 
   setComputedColors(false);
 });

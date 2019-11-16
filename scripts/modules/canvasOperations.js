@@ -1,3 +1,6 @@
+import { hexToRGBA } from "./utils.js";
+import { globalColors } from "./../main.js";
+
 const exportCanvas = document.getElementById("export-canvas");
 const DPI = window.devicePixelRatio;
 const BLACK = "#030303";
@@ -10,7 +13,7 @@ let currentExportObject;
 
 let expCtx = exportCanvas.getContext("2d", { alpha: false });
 
-const fixDPI = () => {
+export const fixDPI = () => {
   //get CSS height
   //the + prefix casts it to an integer
   //the slice method gets rid of "px"
@@ -26,7 +29,7 @@ const fixDPI = () => {
   exportCanvas.setAttribute("width", width * DPI);
 };
 
-const drawSwatches = exportObject => {
+export const drawSwatches = exportObject => {
   currentExportObject = exportObject;
   fixDPI();
 
@@ -133,18 +136,18 @@ const drawSwatches = exportObject => {
     swatchStartPositionX += swatchWidth;
     swatchStartPositionY += swatchHeight;
 
-    expCtx.fillStyle = globalTheme == "dark" ? BLACK : WHITE;
+    expCtx.fillStyle = globalColors.globalTheme == "dark" ? BLACK : WHITE;
     expCtx.fillRect(0, swatchStartPositionY, c.width, REMGAP * 2);
 
     expCtx.font = `${18 * 1}px "Share Tech Mono"`;
     expCtx.textBaseline = "top";
-    expCtx.fillStyle = globalTheme == "dark" ? WHITE : BLACK;
+    expCtx.fillStyle = globalColors.globalTheme == "dark" ? WHITE : BLACK;
     expCtx.fillText(exportNotice, 18, swatchStartPositionY + 18 * 1.75);
     swatchStartPositionY = 0;
   }
 };
 
-const drawSwatchesMobile = exportObject => {
+export const drawSwatchesMobile = exportObject => {
   currentExportObject = exportObject;
   fixDPI();
 
