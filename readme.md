@@ -15,7 +15,7 @@ things I'll be adding in the coming months / weeks:
 -   [x]   refactor my *filthy, nasty* scss
 -   [x]   settings (exclude certain color ranges, change randomization parameters...?)
 -   [x]   show approximate css color name even if the css color isn't *exactly* the same (this is what I'm having trouble with, but sort of works)
--   [x]   refactor my *gross* javascript (looking at you, palette handler script)
+-   [ ]   refactor my *gross* javascript (looking at you, palette handler script)
 -   [ ]   add accessibility features such as simpler keyboard controls
 -   [ ]   there are issues with re-rendering the palette export canvas at certain viewport breakpoints that I literally have no clue how to fix and I can't tell what's causing them. I might fix those someday
 -   [ ]    make another color preview box that shows a nearby wcag aaa color combination
@@ -68,5 +68,5 @@ things I'll be adding in the coming months / weeks:
 
 **patch notes: v0116**
 -   added full palette generation
--   added palette generation types: gradient, monochrome, and analogous (wip) 
+-   added palette generation types: gradient, monochrome, and analogous (wip)
 -   added generation parameters: color amount and modification factor (affects amount of hue / saturation shifting done during palette generation)
