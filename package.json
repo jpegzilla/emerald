@@ -1,0 +1,37 @@
+{
+  "name": "emerald",
+  "version": "1.0.0",
+  "description": "[emerald](https://jpegzilla.com/emerald) is pretty simple. I just made it mainly to combine three of my favorite color tools &mdash; [monochrome](https://monochrome.jxnblk.com/), [contrast-ratio](https://contrast-ratio.com/), and [coolors](https://coolors.co/app).",
+  "main": "index.html",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.7.2",
+    "@babel/preset-env": "^7.7.1",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "css-loader": "^3.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpegzilla/emerald.git"
+  },
+  "keywords": [],
+  "author": "jpegzilla",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jpegzilla/emerald/issues"
+  },
+  "homepage": "https://jpegzilla.com/emerald"
+}
