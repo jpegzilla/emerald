@@ -50,7 +50,6 @@ module.exports = {
         test: /.(js|jsx)$/,
         include: [path.resolve(__dirname, "scripts")],
         loader: "babel-loader",
-        exclude: /node_modules/,
 
         options: {
           plugins: ["syntax-dynamic-import"],

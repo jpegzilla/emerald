@@ -646,7 +646,7 @@ export const setComputedColors = (pushToHistory = false) => {
     text: { rgb: globalColors.deftxtRGB, hex: globalColors.deftxtHex }
   };
 
-  if (currentColorSetting == "background") {
+  if (currentColorSetting.setting == "background") {
     hexBGVal.value = globalColors.defbgHex;
     rgbBGVal.innerText = `rgb(${globalColors.defbgRGB.r}, ${
       globalColors.defbgRGB.g
@@ -658,7 +658,7 @@ export const setComputedColors = (pushToHistory = false) => {
       : `color name (closest): ${findNearestColor(
           globalColors.defbgHex
         ).toLowerCase()}`;
-  } else if (currentColorSetting == "text") {
+  } else if (currentColorSetting.setting == "text") {
     hexBGVal.value = globalColors.deftxtHex;
     rgbBGVal.innerText = `rgb(${globalColors.deftxtRGB.r}, ${
       globalColors.deftxtRGB.g

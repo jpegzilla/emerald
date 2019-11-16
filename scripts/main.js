@@ -33,7 +33,7 @@ export const globalColors = {
 export const firstPalette = { first: true };
 let contrastRatiosSet = false;
 let initialRandomize = true;
-export const currentColorSetting = "background";
+export const currentColorSetting = { setting: "background" };
 export const colorDisplay = document.getElementById("color-field");
 export const colorName = document.getElementsByClassName("color-name")[0];
 const contrastRatioDisplay = document.getElementById("contrast-ratio");
@@ -126,7 +126,7 @@ window.onload = () => {
       let color = hexToRGBA(hexCodeInput.value);
       let rgba = `rgb(${color.r}, ${color.g}, ${color.b})`;
 
-      return currentColorSetting == "background"
+      return currentColorSetting.setting == "background"
         ? updateBG(rgba)
         : updateTxt(rgba);
     } catch (e) {
@@ -641,8 +641,8 @@ const showColorPreviews = document.getElementById("showColorPreviews");
 const showFancyColorNames = document.getElementById("showFancyColorNames");
 
 showBackgroundColor.addEventListener("click", () => {
-  currentColorSetting =
-    currentColorSetting == "background" ? "background" : "background";
+  currentColorSetting.setting =
+    currentColorSetting.setting == "background" ? "background" : "background";
   showTextColor.classList = "";
   showBackgroundColor.classList = "";
   showTextColor.classList.add("inactive");
@@ -651,7 +651,8 @@ showBackgroundColor.addEventListener("click", () => {
 });
 
 showTextColor.addEventListener("click", () => {
-  currentColorSetting = currentColorSetting == "text" ? "text" : "text";
+  currentColorSetting.setting =
+    currentColorSetting.setting == "text" ? "text" : "text";
   showTextColor.classList = "";
   showBackgroundColor.classList = "";
   showTextColor.classList.add("active");
