@@ -19,10 +19,11 @@ things I'll be adding in the coming months / weeks:
 -   [ ]   add accessibility features such as simpler keyboard controls
 -   [ ]   there are issues with re-rendering the palette export canvas at certain viewport breakpoints that I literally have no clue how to fix and I can't tell what's causing them. I might fix those someday
 -   [ ]    make another color preview box that shows a nearby wcag aaa color combination
--   [ ]   refactoring to effectively use webpack
+-   [ ]   refactoring to use webpack
 -   [ ]   just make it nicer to use on a phone (ugh)
 -   [x]   you should be able to type in the hex value
 -   [ ]   add more comments
+-   [ ]   improve gradient palette generation
 -   [x]   add ability to generate entire palette from two colors
 -   [ ]   add palette generation settings: contrast ratio maximum, exclusion range
 
@@ -70,3 +71,6 @@ things I'll be adding in the coming months / weeks:
 -   added full palette generation
 -   added palette generation types: gradient, monochrome, and analogous (wip)
 -   added generation parameters: color amount and modification factor (affects amount of hue / saturation shifting done during palette generation)
+
+**patch notes: v0117**
+-   improved all palette generation by making palettes over five pigments stay in one palette instead of overflowing to two palettes
