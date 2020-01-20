@@ -14,8 +14,8 @@ const FILES_TO_CACHE = [
   "./scripts/utils.js"
 ];
 
-const EMERALD_VERSION = "v0116";
-const CACHE_NAME = "emeraldCache_v0116";
+const EMERALD_VERSION = "v0117";
+const CACHE_NAME = "emeraldCache_v0117";
 const cacheWhitelist = [CACHE_NAME];
 
 self.addEventListener("install", event => {
