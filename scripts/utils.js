@@ -272,7 +272,7 @@ const shiftHue = (rgb, deg) => {
   return hslToRGB(hsl.h, hsl.s, hsl.l);
 };
 
-// function to change color's hue
+// function to change color's saturation
 const shiftSat = (rgb, deg) => {
   let hsl = rgbToNHSL(rgb.r, rgb.g, rgb.b);
 
@@ -382,6 +382,7 @@ const hexDigits = [
   "f"
 ];
 
+// convert number literal to hex string
 const hex = num => {
   return isNaN(num)
     ? "00"
@@ -408,7 +409,7 @@ let fancyColorHexArray = Array.from(Object.values(objectFlip(colorLib)));
 let lastKnownClosestColor;
 
 // findNearestColor finds the name in the color lib that is closest to the color
-// supplies as an argument
+// supplied as an argument
 const findNearestColor = hex => {
   if (typeof hex !== "string")
     throw new Error(
@@ -469,6 +470,8 @@ const findNearestColor = hex => {
   return results;
 };
 
+// this is an unfinished function meant to find a close aaa approximation to the provided colors.
+// this would be used to display the closest known aaa color combination for any pair.
 const findNearestAAAColor = (background, text, nearestTo = "text") => {
   // get current contrast ratio
   let currCr = getContrastRatio(text, background).number;
@@ -518,6 +521,7 @@ const findNearestAAAColor = (background, text, nearestTo = "text") => {
 
 // this is a method for allowing the user to copy a color swatch's contents by clicking on it
 const setColorSwatchListeners = () => {
+  // function that just copies the text in a provided element
   const copyColor = (element, e) => {
     e.preventDefault();
     window.getSelection().selectAllChildren(element);
@@ -539,7 +543,9 @@ const setColorSwatchListeners = () => {
 
 setColorSwatchListeners();
 
-// this is called to update global colors every time a color slider is changed
+// this is called to update global colors every time a color is changed in any way.
+// pushtohistory is used in cases where the method that updates the color doesn't also
+// update the history of color randomization.
 const setComputedColors = (pushToHistory = false) => {
   setColorNames();
 
@@ -572,12 +578,14 @@ const setComputedColors = (pushToHistory = false) => {
     header.classList.remove("black");
   }
 
+  // create rgb objects and hex values for bg and text colors
   defbgRGB = { r: bgrgb[1], g: bgrgb[2], b: bgrgb[3] };
   defbgHex = rgbToHex(defbgRGB.r, defbgRGB.g, defbgRGB.b);
 
   deftxtRGB = { r: txtrgb[1], g: txtrgb[2], b: txtrgb[3] };
   deftxtHex = rgbToHex(deftxtRGB.r, deftxtRGB.g, deftxtRGB.b);
 
+  // retrieve all elements to update the text in color indicators
   let bgCssName = document.getElementById("css-name");
 
   let rBGVal = document.getElementById("redBGValue");
@@ -602,6 +610,9 @@ const setComputedColors = (pushToHistory = false) => {
   let bgColorName = hexToColorName(cssColorNames, defbgHex);
   let txtColorName = hexToColorName(cssColorNames, deftxtHex);
 
+  // if the color setting is set to "background", only update
+  // the background color information indicators. otherwise,
+  // only update the text color indicators.
   if (currentColorSetting == "background") {
     hexBGVal.value = defbgHex;
     rgbBGVal.innerText = `rgb(${defbgRGB.r}, ${defbgRGB.g}, ${defbgRGB.b})`;
@@ -622,6 +633,7 @@ const setComputedColors = (pushToHistory = false) => {
       : `color name (closest): ${findNearestColor(deftxtHex).toLowerCase()}`;
   }
 
+  // set the text indicators to the corresponding colors
   rBGVal.innerText = bgrgb[1];
   gBGVal.innerText = bgrgb[2];
   bBGVal.innerText = bgrgb[3];
@@ -632,6 +644,7 @@ const setComputedColors = (pushToHistory = false) => {
 
   contrastRatioStringDisplay.innerText = `contrast ratio: ${contrastRatioString}`;
 
+  // find the correct wcag level for the current contrast ratio
   for (let i in wcagLevels) {
     for (let j in wcagLevels[i]) {
       let levels = wcagLevels[i][j];
@@ -650,24 +663,31 @@ const setComputedColors = (pushToHistory = false) => {
 
   let oldColorObject = colorObject;
 
+  // create a colorObject with color info in it
   colorObject = {
     bg: { rgb: defbgRGB, hex: defbgHex },
     text: { rgb: deftxtRGB, hex: deftxtHex }
   };
 
-  if (initialColorHistory == true && pushToHistory == true) {
-    initialColorHistory = false;
-    colorHistory.push(colorObject);
-  }
+  // if this is the first history addition, push the colorobject to the empty history array.
+  // otherwise, push the object and also increase the index, which determines position in the
+  // history array for undo / redo operations.
+  if (pushToHistory == true) {
+    if (initialColorHistory == true) {
+      initialColorHistory = false;
+      colorHistory.push(colorObject);
+    }
 
-  if (oldColorObject != undefined && pushToHistory == true) {
-    colorHistory.push(colorObject);
-    colorHistoryIndex++;
+    if (oldColorObject != undefined) {
+      colorHistory.push(colorObject);
+      colorHistoryIndex++;
+    }
   }
 
   const bgAlts = [colorObject.bg.hex];
   const textAlts = [colorObject.text.hex];
 
+  // update the alt shades (color preview bars on the right)
   for (let i = 1; i < 6; i++) {
     let newShadeBg, newShadeText;
 
@@ -685,7 +705,7 @@ const setComputedColors = (pushToHistory = false) => {
     } else textAlts.push(newShadeText);
   }
 
-  // function determines the lightness of the background of the alternative shades
+  // determine the lightness of the background of the alternative shades
   // and uses that information to determine whether the text in the alternative
   // shade box should be black or white
   const manageBoxTextColor = box => {
