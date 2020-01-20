@@ -506,7 +506,7 @@ const addPigment = (paletteBar, bgHex, textHex, saveColor = false) => {
   paletteBar.appendChild(pigmentContainer);
 };
 
-const addColorToPalette = (bgColor, textColor) => {
+const addColorToPalette = (bgColor, textColor, over = false) => {
   let pigment = palettePigmentTemplate.cloneNode(true);
   pigment.id = "";
 
@@ -519,7 +519,10 @@ const addColorToPalette = (bgColor, textColor) => {
     text: { hex: textHex, rgb: textColor }
   };
 
-  if (PALETTES[currentPalette].length < 5) {
+  if (PALETTES[currentPalette].length < 5 && !over) {
+    PALETTES[currentPalette].push(localColorObject);
+    addPigment(currentPaletteBar, bgHex, textHex);
+  } else if (over) {
     PALETTES[currentPalette].push(localColorObject);
     addPigment(currentPaletteBar, bgHex, textHex);
   } else addNewPaletteBar(bgHex, textHex);
@@ -586,6 +589,9 @@ const makeFullPalette = () => {
       const interpolateColor = (color1, color2, factor) => {
         if (!factor) factor = 0.5;
 
+        // color1 and color2 are arrays of rgb colors.
+        // ex [ 80, 120, 40]
+
         let result = color1.slice();
         for (let i = 0; i < 3; i++)
           result[i] = Math.round(result[i] + factor * (color2[i] - color1[i]));
@@ -611,6 +617,7 @@ const makeFullPalette = () => {
       interpolateColor2,
       paletteGenParams.count
     );
+
     for (let i = 1; i < bgIntp.length; i++) {
       let newBgColor = { r: bgIntp[i][0], g: bgIntp[i][1], b: bgIntp[i][2] };
       let newTxtColor = { r: bgIntp[i][0], g: bgIntp[i][1], b: bgIntp[i][2] };
@@ -619,7 +626,7 @@ const makeFullPalette = () => {
     }
 
     bgColors.forEach((color, i) => {
-      if (i > 0) addColorToPalette(color, txtColors[i]);
+      if (i > 0) addColorToPalette(color, txtColors[i], true);
     });
   }
 
@@ -659,7 +666,7 @@ const makeFullPalette = () => {
     }
 
     bgColors.forEach((color, i) => {
-      if (i > 0) addColorToPalette(color, txtColors[i]);
+      if (i > 0) addColorToPalette(color, txtColors[i], true);
     });
   }
 
@@ -698,7 +705,7 @@ const makeFullPalette = () => {
     // for each color in the generated list...
     bgColors.forEach((color, i) => {
       // except for the first one, add them all to the newly created palette
-      if (i > 0) addColorToPalette(color, txtColors[i]);
+      if (i > 0) addColorToPalette(color, txtColors[i], true);
     });
   }
 
